@@ -376,6 +376,7 @@ class BrokenSiteSubmitterTest {
             httpErrorCodes = "",
             loginSite = null,
             reportFlow = ReportFlow.MENU,
+            userRefreshCount = 0,
         )
     }
 }

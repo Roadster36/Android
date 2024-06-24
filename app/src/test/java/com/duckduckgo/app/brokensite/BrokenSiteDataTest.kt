@@ -193,6 +193,21 @@ class BrokenSiteDataTest {
         assertEquals("surrogate.com", BrokenSiteData.fromSite(site, reportFlow = MENU).surrogates)
     }
 
+    @Test
+    fun whenUserHasTriggeredRefreshThenUserRefreshCountParameterReflectsCount() {
+        val site = buildSite(SITE_URL)
+        site.userRefreshCount = 5
+        val data = BrokenSiteData.fromSite(site, reportFlow = MENU)
+        assertEquals("5", data.userRefreshCount)
+    }
+
+    @Test
+    fun whenUserHasNotTriggeredRefreshThenUserRefreshCountParameterIsZero() {
+        val site = buildSite(SITE_URL)
+        val data = BrokenSiteData.fromSite(site, reportFlow = MENU)
+        assertEquals("0", data.userRefreshCount)
+    }
+
     private fun buildSite(
         url: String,
         httpsUpgraded: Boolean = false,

@@ -45,7 +45,7 @@ data class BrokenSiteData(
     enum class ReportFlow { MENU, DASHBOARD }
 
     companion object {
-        fun fromSite(site: Site?, reportFlow: ReportFlow, userRefreshCount: Int): BrokenSiteData {
+        fun fromSite(site: Site?, reportFlow: ReportFlow): BrokenSiteData {
             val events = site?.trackingEvents
             val blockedTrackers = events?.filter { it.status == TrackerStatus.BLOCKED }
                 ?.map { Uri.parse(it.trackerUrl).baseHost.orEmpty() }
@@ -60,6 +60,7 @@ data class BrokenSiteData(
             val consentOptOutFailed = site?.consentOptOutFailed ?: false
             val consentSelfTestFailed = site?.consentSelfTestFailed ?: false
             val isDesktopMode = site?.isDesktopMode ?: false
+            val userRefreshCount = site?.userRefreshCount ?: 0
             return BrokenSiteData(
                 url = url,
                 blockedTrackers = blockedTrackers,
@@ -73,7 +74,7 @@ data class BrokenSiteData(
                 httpErrorCodes = httErrorCodes,
                 isDesktopMode = isDesktopMode,
                 reportFlow = reportFlow,
-                userRefreshCount,
+                userRefreshCount = userRefreshCount,
             )
         }
     }

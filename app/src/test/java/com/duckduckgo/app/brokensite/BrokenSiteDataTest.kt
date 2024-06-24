@@ -48,7 +48,7 @@ class BrokenSiteDataTest {
 
     @Test
     fun whenSiteIsNullThenDataIsEmptyAndUpgradedIsFalse() {
-        val data = BrokenSiteData.fromSite(null, reportFlow = MENU, userRefreshCount = 0)
+        val data = BrokenSiteData.fromSite(null, reportFlow = MENU)
         assertTrue(data.url.isEmpty())
         assertTrue(data.blockedTrackers.isEmpty())
         assertTrue(data.surrogates.isEmpty())
@@ -58,21 +58,21 @@ class BrokenSiteDataTest {
     @Test
     fun whenSiteExistsThenDataContainsUrl() {
         val site = buildSite(SITE_URL)
-        val data = BrokenSiteData.fromSite(site, reportFlow = MENU, userRefreshCount = 0)
+        val data = BrokenSiteData.fromSite(site, reportFlow = MENU)
         assertEquals(SITE_URL, data.url)
     }
 
     @Test
     fun whenSiteUpgradedThenHttpsUpgradedIsTrue() {
         val site = buildSite(SITE_URL, httpsUpgraded = true)
-        val data = BrokenSiteData.fromSite(site, reportFlow = MENU, userRefreshCount = 0)
+        val data = BrokenSiteData.fromSite(site, reportFlow = MENU)
         assertTrue(data.upgradedToHttps)
     }
 
     @Test
     fun whenSiteNotUpgradedThenHttpsUpgradedIsFalse() {
         val site = buildSite(SITE_URL, httpsUpgraded = false)
-        val data = BrokenSiteData.fromSite(site, reportFlow = MENU, userRefreshCount = 0)
+        val data = BrokenSiteData.fromSite(site, reportFlow = MENU)
         assertFalse(data.upgradedToHttps)
     }
 
@@ -80,21 +80,21 @@ class BrokenSiteDataTest {
     fun whenUrlParametersRemovedThenUrlParametersRemovedIsTrue() {
         val site = buildSite(SITE_URL)
         site.urlParametersRemoved = true
-        val data = BrokenSiteData.fromSite(site, reportFlow = MENU, userRefreshCount = 0)
+        val data = BrokenSiteData.fromSite(site, reportFlow = MENU)
         assertTrue(data.urlParametersRemoved)
     }
 
     @Test
     fun whenUrlParametersNotRemovedThenUrlParametersRemovedIsFalse() {
         val site = buildSite(SITE_URL)
-        val data = BrokenSiteData.fromSite(site, reportFlow = MENU, userRefreshCount = 0)
+        val data = BrokenSiteData.fromSite(site, reportFlow = MENU)
         assertFalse(data.urlParametersRemoved)
     }
 
     @Test
     fun whenSiteHasNoTrackersThenBlockedTrackersIsEmpty() {
         val site = buildSite(SITE_URL)
-        val data = BrokenSiteData.fromSite(site, reportFlow = MENU, userRefreshCount = 0)
+        val data = BrokenSiteData.fromSite(site, reportFlow = MENU)
         assertTrue(data.blockedTrackers.isEmpty())
     }
 
@@ -121,7 +121,7 @@ class BrokenSiteDataTest {
         )
         site.trackerDetected(event)
         site.trackerDetected(anotherEvent)
-        assertEquals("tracker.com", BrokenSiteData.fromSite(site, reportFlow = MENU, userRefreshCount = 0).blockedTrackers)
+        assertEquals("tracker.com", BrokenSiteData.fromSite(site, reportFlow = MENU).blockedTrackers)
     }
 
     @Test
@@ -147,7 +147,7 @@ class BrokenSiteDataTest {
         )
         site.trackerDetected(event)
         site.trackerDetected(anotherEvent)
-        assertEquals("tracker.com", BrokenSiteData.fromSite(site, reportFlow = MENU, userRefreshCount = 0).blockedTrackers)
+        assertEquals("tracker.com", BrokenSiteData.fromSite(site, reportFlow = MENU).blockedTrackers)
     }
 
     @Test
@@ -163,13 +163,13 @@ class BrokenSiteDataTest {
             type = TrackerType.OTHER,
         )
         site.trackerDetected(event)
-        assertEquals(".tracker.com", BrokenSiteData.fromSite(site, reportFlow = MENU, userRefreshCount = 0).blockedTrackers)
+        assertEquals(".tracker.com", BrokenSiteData.fromSite(site, reportFlow = MENU).blockedTrackers)
     }
 
     @Test
     fun whenSiteHasNoSurrogatesThenSurrogatesIsEmpty() {
         val site = buildSite(SITE_URL)
-        val data = BrokenSiteData.fromSite(site, reportFlow = MENU, userRefreshCount = 0)
+        val data = BrokenSiteData.fromSite(site, reportFlow = MENU)
         assertTrue(data.surrogates.isEmpty())
     }
 
@@ -180,7 +180,7 @@ class BrokenSiteDataTest {
         val site = buildSite(SITE_URL)
         site.surrogateDetected(surrogate)
         site.surrogateDetected(anotherSurrogate)
-        assertEquals("surrogate.com,anothersurrogate.com", BrokenSiteData.fromSite(site, reportFlow = MENU, userRefreshCount = 0).surrogates)
+        assertEquals("surrogate.com,anothersurrogate.com", BrokenSiteData.fromSite(site, reportFlow = MENU).surrogates)
     }
 
     @Test
@@ -190,7 +190,7 @@ class BrokenSiteDataTest {
         val site = buildSite(SITE_URL)
         site.surrogateDetected(surrogate)
         site.surrogateDetected(anotherSurrogate)
-        assertEquals("surrogate.com", BrokenSiteData.fromSite(site, reportFlow = MENU, userRefreshCount = 0).surrogates)
+        assertEquals("surrogate.com", BrokenSiteData.fromSite(site, reportFlow = MENU).surrogates)
     }
 
     private fun buildSite(

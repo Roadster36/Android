@@ -992,7 +992,7 @@ class BrowserTabViewModel @Inject constructor(
         }
 
         if (triggeredByUser) {
-            userRefreshCount++
+            site?.onUserTriggeredRefresh()
             privacyProtectionsPopupManager.onPageRefreshTriggeredByUser()
         }
     }
@@ -2106,7 +2106,7 @@ class BrowserTabViewModel @Inject constructor(
     }
 
     fun onBrokenSiteSelected() {
-        command.value = BrokenSiteFeedback(BrokenSiteData.fromSite(site, reportFlow = MENU, userRefreshCount = userRefreshCount))
+        command.value = BrokenSiteFeedback(BrokenSiteData.fromSite(site, reportFlow = MENU))
     }
 
     fun onPrivacyProtectionMenuClicked(clickedFromCustomTab: Boolean = false) {

@@ -114,7 +114,7 @@ class BrokenSiteSubmitter @Inject constructor(
                 PROTECTIONS_STATE to protectionsState.toString(),
                 VPN_ON to vpnOn.toString(),
                 LOCALE to locale,
-                USER_REFRESH_COUNT to brokenSite.userRefreshCount,
+                USER_REFRESH_COUNT to brokenSite.userRefreshCount.toString(),
             )
 
             brokenSite.reportFlow?.let { reportFlow ->

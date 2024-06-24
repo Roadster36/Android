@@ -237,7 +237,7 @@ class PrivacyDashboardHybridViewModel @Inject constructor(
 
     fun onReportBrokenSiteSelected() {
         viewModelScope.launch(dispatcher.io()) {
-            val siteData = BrokenSiteData.fromSite(site.value, reportFlow = DASHBOARD, userRefreshCount = -1)
+            val siteData = BrokenSiteData.fromSite(site.value, reportFlow = DASHBOARD)
             command.send(LaunchReportBrokenSite(siteData))
         }
     }

@@ -34,6 +34,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.mock
+import timber.log.Timber
 
 @RunWith(AndroidJUnit4::class)
 class BrokenSiteDataTest {
@@ -198,14 +199,16 @@ class BrokenSiteDataTest {
         val site = buildSite(SITE_URL)
         site.userRefreshCount = 5
         val data = BrokenSiteData.fromSite(site, reportFlow = MENU)
-        assertEquals("5", data.userRefreshCount)
+        Timber.d("userRefreshCount (5): ", data.userRefreshCount.toString())
+        assertEquals("5", data.userRefreshCount.toString())
     }
 
     @Test
     fun whenUserHasNotTriggeredRefreshThenUserRefreshCountParameterIsZero() {
         val site = buildSite(SITE_URL)
         val data = BrokenSiteData.fromSite(site, reportFlow = MENU)
-        assertEquals("0", data.userRefreshCount)
+        Timber.d("userRefreshCount (0): ", data.userRefreshCount.toString())
+        assertEquals("0", data.userRefreshCount.toString())
     }
 
     private fun buildSite(

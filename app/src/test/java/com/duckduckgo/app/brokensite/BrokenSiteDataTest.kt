@@ -199,16 +199,14 @@ class BrokenSiteDataTest {
         val site = buildSite(SITE_URL)
         site.userRefreshCount = 5
         val data = BrokenSiteData.fromSite(site, reportFlow = MENU)
-        Timber.d("userRefreshCount (5): ", data.userRefreshCount.toString())
-        assertEquals("5", data.userRefreshCount.toString())
+        assertEquals(5, data.userRefreshCount)
     }
 
     @Test
     fun whenUserHasNotTriggeredRefreshThenUserRefreshCountParameterIsZero() {
         val site = buildSite(SITE_URL)
         val data = BrokenSiteData.fromSite(site, reportFlow = MENU)
-        Timber.d("userRefreshCount (0): ", data.userRefreshCount.toString())
-        assertEquals("0", data.userRefreshCount.toString())
+        assertEquals(0, data.userRefreshCount)
     }
 
     private fun buildSite(

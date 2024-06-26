@@ -78,6 +78,7 @@ import kotlinx.coroutines.*
 import timber.log.Timber
 
 private const val ABOUT_BLANK = "about:blank"
+private const val REFERER_HEADER = "Referer"
 
 class BrowserWebViewClient @Inject constructor(
     private val webViewHttpAuthStore: WebViewHttpAuthStore,
@@ -122,6 +123,8 @@ class BrowserWebViewClient @Inject constructor(
         request: WebResourceRequest,
     ): Boolean {
         val url = request.url
+        val referrer = request.requestHeaders[REFERER_HEADER]?.toUri()?.host
+        webViewClientListener?.inferLoadContext(referrer, request.isForMainFrame)
         return shouldOverride(view, url, request.isForMainFrame)
     }
 

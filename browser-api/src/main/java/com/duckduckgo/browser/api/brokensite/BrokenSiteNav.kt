@@ -41,8 +41,11 @@ data class BrokenSiteData(
     val isDesktopMode: Boolean,
     val reportFlow: ReportFlow,
     val userRefreshCount: Int,
+    val openerContext: OpenerContext?,
 ) {
     enum class ReportFlow { MENU, DASHBOARD }
+    enum class OpenerContext { SERP, EXTERNAL, NAVIGATION }
+
 
     companion object {
         fun fromSite(site: Site?, reportFlow: ReportFlow): BrokenSiteData {
@@ -61,6 +64,7 @@ data class BrokenSiteData(
             val consentSelfTestFailed = site?.consentSelfTestFailed ?: false
             val isDesktopMode = site?.isDesktopMode ?: false
             val userRefreshCount = site?.userRefreshCount ?: 0
+            val openerContext = site?.openerContext
             return BrokenSiteData(
                 url = url,
                 blockedTrackers = blockedTrackers,
@@ -75,6 +79,7 @@ data class BrokenSiteData(
                 isDesktopMode = isDesktopMode,
                 reportFlow = reportFlow,
                 userRefreshCount = userRefreshCount,
+                openerContext = openerContext,
             )
         }
     }

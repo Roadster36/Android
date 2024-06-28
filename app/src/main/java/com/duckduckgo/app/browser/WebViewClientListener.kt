@@ -26,7 +26,6 @@ import android.webkit.PermissionRequest
 import android.webkit.SslErrorHandler
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
-import android.webkit.WebResourceRequest
 import com.duckduckgo.app.browser.model.BasicAuthenticationRequest
 import com.duckduckgo.app.global.model.Site
 import com.duckduckgo.app.surrogates.SurrogateResponse
@@ -103,7 +102,7 @@ interface WebViewClientListener {
     fun onReceivedError(errorType: WebViewErrorResponse, url: String)
     fun recordErrorCode(error: String, url: String)
     fun recordHttpErrorCode(statusCode: Int, url: String)
-    fun inferLoadContext(referer: String?, isMain: Boolean)
+    fun inferLoadContext(referrer: String?, isMain: Boolean)
 
     fun getCurrentTabId(): String
 

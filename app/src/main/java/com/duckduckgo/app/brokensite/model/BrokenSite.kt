@@ -68,4 +68,8 @@ sealed class BrokenSiteCategory(
 }
 
 enum class ReportFlow { DASHBOARD, MENU }
-enum class OpenerContext { SERP, EXTERNAL, NAVIGATION }
+enum class OpenerContext(val context: String)  {
+    SERP("serp"),
+    EXTERNAL("external"),
+    NAVIGATION("navigation")
+}

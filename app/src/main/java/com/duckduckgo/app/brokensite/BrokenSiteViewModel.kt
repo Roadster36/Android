@@ -301,6 +301,6 @@ private fun ReportFlow.mapToBrokenSiteModelReportFlow(): BrokenSiteModelReportFl
 
 private fun OpenerContext.mapToBrokenSiteModelOpenerContext(): BrokenSiteModelOpenerContext = when (this) {
     SERP -> BrokenSiteModelOpenerContext.SERP
-    EXTERNAL -> BrokenSiteModelOpenerContext.EXTERNAL
     NAVIGATION -> BrokenSiteModelOpenerContext.NAVIGATION
+    EXTERNAL -> BrokenSiteModelOpenerContext.EXTERNAL
 }

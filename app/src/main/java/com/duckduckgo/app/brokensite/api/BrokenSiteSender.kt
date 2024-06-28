@@ -22,6 +22,10 @@ import com.duckduckgo.app.brokensite.model.BrokenSite
 import com.duckduckgo.app.brokensite.model.ReportFlow
 import com.duckduckgo.app.brokensite.model.ReportFlow.DASHBOARD
 import com.duckduckgo.app.brokensite.model.ReportFlow.MENU
+import com.duckduckgo.app.brokensite.model.OpenerContext
+import com.duckduckgo.app.brokensite.model.OpenerContext.EXTERNAL
+import com.duckduckgo.app.brokensite.model.OpenerContext.NAVIGATION
+import com.duckduckgo.app.brokensite.model.OpenerContext.SERP
 import com.duckduckgo.app.di.AppCoroutineScope
 import com.duckduckgo.app.pixels.AppPixelName
 import com.duckduckgo.app.privacy.db.UserAllowListRepository
@@ -115,6 +119,7 @@ class BrokenSiteSubmitter @Inject constructor(
                 VPN_ON to vpnOn.toString(),
                 LOCALE to locale,
                 USER_REFRESH_COUNT to brokenSite.userRefreshCount.toString(),
+                OPENER_CONTEXT to brokenSite.openerContext?.context.orEmpty()
             )
 
             brokenSite.reportFlow?.let { reportFlow ->
@@ -184,6 +189,7 @@ class BrokenSiteSubmitter @Inject constructor(
         private const val VPN_ON = "vpnOn"
         private const val LOCALE = "locale"
         private const val USER_REFRESH_COUNT = "userRefreshCount"
+        private const val OPENER_CONTEXT = "openerContext"
     }
 }
 

@@ -210,6 +210,11 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.json.JSONObject
 import timber.log.Timber
 
+private const val DUCKDUCKGO = "duckduckgo"
+private const val HTTP_SCHEME = "http"
+private const val HTTPS_SCHEME = "https"
+private const val DATA_SCHEME = "data"
+
 @ContributesViewModel(FragmentScope::class)
 class BrowserTabViewModel @Inject constructor(
     private val statisticsUpdater: StatisticsUpdater,
@@ -3262,10 +3267,20 @@ class BrowserTabViewModel @Inject constructor(
     }
 
     override fun inferLoadContext(
-        referer: String?,
+        referrer: String?,
         isMain: Boolean
     ) {
-        TODO("Not yet implemented")
+        val navSchemes = listOf(HTTP_SCHEME, HTTPS_SCHEME, DATA_SCHEME)
+        if (referrer != null && isMain) {
+            openerContext = when {
+                navSchemes.any {referrer.contains(it)} -> OpenerContext.NAVIGATION
+                referrer.contains(DUCKDUCKGO) -> OpenerContext.SERP
+                else -> OpenerContext.EXTERNAL
+            }
+            Timber.d("OpenerContext assigned: ", openerContext)
+        } else {
+            Timber.d("OpenerContext not assigned bc referer is null ")
+        }
     }
 
     fun onUserDismissedAutoCompleteInAppMessage() {

@@ -123,7 +123,7 @@ class BrowserWebViewClient @Inject constructor(
         request: WebResourceRequest,
     ): Boolean {
         val url = request.url
-        val referrer = request.requestHeaders[REFERER_HEADER]?.toUri()?.host
+        val referrer = request.requestHeaders[REFERER_HEADER]
         webViewClientListener?.inferLoadContext(referrer, request.isForMainFrame)
         return shouldOverride(view, url, request.isForMainFrame)
     }
@@ -140,7 +140,7 @@ class BrowserWebViewClient @Inject constructor(
             Timber.v("shouldOverride webViewUrl: ${webView.url} URL: $url")
             webViewClientListener?.onShouldOverride()
             if (isForMainFrame && dosDetector.isUrlGeneratingDos(url)) {
-                webView.loadUrl("about:blank")
+                webView.loadUrl(ABOUT_BLANK)
                 webViewClientListener?.dosAttackDetected()
                 return false
             }

@@ -71,15 +71,10 @@ class SiteMonitor(
         get() = httpsStatus()
 
     override var hasHttpResources = false
-
     override var sslError: Boolean = false
-
     override var userRefreshCount: Int = 0
-
     override var openerContext: OpenerContext? = null
-
     override var entity: Entity? = null
-
     override var certificate: SslCertificate? = null
 
     override val trackingEvents = CopyOnWriteArrayList<TrackingEvent>()

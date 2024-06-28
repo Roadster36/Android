@@ -44,7 +44,11 @@ data class BrokenSiteData(
     val openerContext: OpenerContext?,
 ) {
     enum class ReportFlow { MENU, DASHBOARD }
-    enum class OpenerContext { SERP, EXTERNAL, NAVIGATION }
+    enum class OpenerContext(val context: String)  {
+        SERP("serp"),
+        EXTERNAL("external"),
+        NAVIGATION("navigation")
+    }
 
 
     companion object {

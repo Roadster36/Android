@@ -74,6 +74,7 @@ import com.duckduckgo.app.browser.commands.Command
 import com.duckduckgo.app.browser.commands.Command.*
 import com.duckduckgo.app.browser.commands.NavigationCommand
 import com.duckduckgo.app.browser.customtabs.CustomTabPixelNames
+import com.duckduckgo.app.browser.duckplayer.DuckPlayerJSHelper
 import com.duckduckgo.app.browser.favicon.FaviconManager
 import com.duckduckgo.app.browser.favicon.FaviconSource.ImageFavicon
 import com.duckduckgo.app.browser.favicon.FaviconSource.UrlFavicon
@@ -170,6 +171,7 @@ import com.duckduckgo.downloads.api.DownloadCommand
 import com.duckduckgo.downloads.api.DownloadStateListener
 import com.duckduckgo.downloads.api.FileDownloader
 import com.duckduckgo.downloads.api.FileDownloader.PendingFileDownload
+import com.duckduckgo.duckplayer.api.DuckPlayer
 import com.duckduckgo.history.api.NavigationHistory
 import com.duckduckgo.js.messaging.api.JsCallbackData
 import com.duckduckgo.privacy.config.api.*
@@ -271,6 +273,8 @@ class BrowserTabViewModel @Inject constructor(
     private val userBrowserProperties: UserBrowserProperties,
     private val history: NavigationHistory,
     private val commandActionMapper: CommandActionMapper,
+    private val duckPlayer: DuckPlayer,
+    private val duckPlayerJSHelper: DuckPlayerJSHelper,
 ) : WebViewClientListener,
     EditSavedSiteListener,
     DeleteBookmarkListener,
@@ -3022,6 +3026,19 @@ class BrowserTabViewModel @Inject constructor(
             }
 
             "screenUnlock" -> screenUnlock()
+
+            "getUserValues" -> if (id != null) {
+                getUserValues(featureName, method, id)
+            }
+
+            "setUserValues" -> if (data != null) {
+                setUserValues(data)
+            }
+
+            "sendDuckPlayerPixel" -> if (data != null) {
+                sendDuckPlayerPixel(data)
+            }
+
             else -> {
                 // NOOP
             }
@@ -3079,6 +3096,35 @@ class BrowserTabViewModel @Inject constructor(
                     command.value = ScreenUnlock
                 }
             }
+        }
+    }
+
+    private fun getUserValues(
+        featureName: String,
+        method: String,
+        id: String,
+    ) {
+        viewModelScope.launch(dispatchers.io()) {
+            val response = duckPlayerJSHelper.getUserValues(featureName, method, id)
+            withContext(dispatchers.main()) {
+                command.value = SendResponseToJs(response)
+            }
+        }
+    }
+
+    private fun setUserValues(
+        data: JSONObject,
+    ) {
+        viewModelScope.launch(dispatchers.io()) {
+            duckPlayerJSHelper.setUserValues(data)
+        }
+    }
+
+    private fun sendDuckPlayerPixel(
+        data: JSONObject,
+    ) {
+        viewModelScope.launch(dispatchers.io()) {
+            duckPlayerJSHelper.sendDuckPlayerPixel(data)
         }
     }
 

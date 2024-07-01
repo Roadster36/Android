@@ -75,7 +75,6 @@ import com.duckduckgo.user.agent.api.ClientBrandHintProvider
 import java.net.URI
 import javax.inject.Inject
 import kotlinx.coroutines.*
-import org.json.JSONObject
 import timber.log.Timber
 
 private const val ABOUT_BLANK = "about:blank"

@@ -22,10 +22,6 @@ import com.duckduckgo.app.brokensite.model.BrokenSite
 import com.duckduckgo.app.brokensite.model.ReportFlow
 import com.duckduckgo.app.brokensite.model.ReportFlow.DASHBOARD
 import com.duckduckgo.app.brokensite.model.ReportFlow.MENU
-import com.duckduckgo.app.brokensite.model.OpenerContext
-import com.duckduckgo.app.brokensite.model.OpenerContext.EXTERNAL
-import com.duckduckgo.app.brokensite.model.OpenerContext.NAVIGATION
-import com.duckduckgo.app.brokensite.model.OpenerContext.SERP
 import com.duckduckgo.app.di.AppCoroutineScope
 import com.duckduckgo.app.pixels.AppPixelName
 import com.duckduckgo.app.privacy.db.UserAllowListRepository

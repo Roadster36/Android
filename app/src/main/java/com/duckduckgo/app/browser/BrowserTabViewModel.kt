@@ -213,7 +213,6 @@ import timber.log.Timber
 private const val DUCKDUCKGO = "duckduckgo"
 private const val HTTP_SCHEME = "http"
 private const val HTTPS_SCHEME = "https"
-private const val DATA_SCHEME = "data"
 
 @ContributesViewModel(FragmentScope::class)
 class BrowserTabViewModel @Inject constructor(
@@ -3270,7 +3269,7 @@ class BrowserTabViewModel @Inject constructor(
         referrer: String?
     ) {
         Timber.d("Referrer: $referrer received in inferLoadContext")
-        val navSchemes = listOf(HTTP_SCHEME, HTTPS_SCHEME, DATA_SCHEME)
+        val navSchemes = listOf(HTTP_SCHEME, HTTPS_SCHEME)
         val refScheme = referrer?.toUri()?.scheme
         val refHost = referrer?.toUri()?.host
         if (refScheme != null && refHost != null) {

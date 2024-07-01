@@ -3267,19 +3267,22 @@ class BrowserTabViewModel @Inject constructor(
     }
 
     override fun inferLoadContext(
-        referrer: String?,
-        isMain: Boolean
+        referrer: String?
     ) {
+        Timber.d("Referrer: $referrer received in inferLoadContext")
         val navSchemes = listOf(HTTP_SCHEME, HTTPS_SCHEME, DATA_SCHEME)
-        if (referrer != null && isMain) {
+        val refScheme = referrer?.toUri()?.scheme
+        val refHost = referrer?.toUri()?.host
+        if (refScheme != null && refHost != null) {
             openerContext = when {
-                navSchemes.any {referrer.contains(it)} -> OpenerContext.NAVIGATION
-                referrer.contains(DUCKDUCKGO) -> OpenerContext.SERP
-                else -> OpenerContext.EXTERNAL
+                refHost.contains(DUCKDUCKGO) -> OpenerContext.SERP
+                navSchemes.any { refScheme.contains(it) } -> OpenerContext.NAVIGATION
+                refScheme.isNotEmpty() -> OpenerContext.EXTERNAL
+                else -> null
             }
-            Timber.d("OpenerContext assigned: ", openerContext)
+            Timber.d("OpenerContext assigned: ${openerContext?.context} from referrer string: $referrer")
         } else {
-            Timber.d("OpenerContext not assigned bc referer is null ")
+            Timber.d("OpenerContext not assigned bc referrer is null ")
         }
     }
 

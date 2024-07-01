@@ -50,7 +50,6 @@ data class BrokenSiteData(
         NAVIGATION("navigation")
     }
 
-
     companion object {
         fun fromSite(site: Site?, reportFlow: ReportFlow): BrokenSiteData {
             val events = site?.trackingEvents

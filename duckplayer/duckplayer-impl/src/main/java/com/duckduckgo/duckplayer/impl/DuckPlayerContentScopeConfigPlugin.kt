@@ -29,7 +29,7 @@ class DuckPlayerContentScopeConfigPlugin @Inject constructor(
 
     override fun config(): String {
         val featureName = DuckPlayerFeatureName.DuckPlayer.value
-        val config = duckPlayerFeatureRepository.getDuckPlayerRC()
+        val config = duckPlayerFeatureRepository.getDuckPlayerRemoteConfigJson()
         return "\"$featureName\":$config"
     }
 

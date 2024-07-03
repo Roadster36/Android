@@ -16,6 +16,9 @@
 
 package com.duckduckgo.app.browser.duckplayer
 
+import com.duckduckgo.app.browser.commands.Command
+import com.duckduckgo.app.browser.commands.Command.SendResponseToJs
+import com.duckduckgo.app.browser.commands.NavigationCommand.Navigate
 import com.duckduckgo.duckplayer.api.DuckPlayer
 import com.duckduckgo.js.messaging.api.JsCallbackData
 import javax.inject.Inject
@@ -63,22 +66,29 @@ class DuckPlayerJSHelper @Inject constructor(
         method: String,
         id: String?,
         data: JSONObject?,
-    ): JsCallbackData? {
+    ): Command? {
         when (method) {
             "getUserValues" -> if (id != null) {
-                return getUserPreferences(featureName, method, id)
+                return SendResponseToJs(getUserPreferences(featureName, method, id))
             }
 
-            "setUserValues" -> if (data != null) {
+            "setUserValues" -> if (id != null && data != null) {
                 setUserPreferences(data)
-                return null
+                return SendResponseToJs(getUserPreferences(featureName, method, id))
             }
 
             "sendDuckPlayerPixel" -> if (data != null) {
                 sendDuckPlayerPixel(data)
                 return null
             }
-            else -> return null
+            "openDuckPlayer" -> {
+                return data?.getString("href")?.let {
+                    Navigate(it, mapOf())
+                }
+            }
+            else -> {
+                return null
+            }
         }
         return null
     }

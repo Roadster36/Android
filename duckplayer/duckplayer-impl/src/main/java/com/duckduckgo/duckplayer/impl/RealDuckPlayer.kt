@@ -17,7 +17,6 @@
 package com.duckduckgo.duckplayer.impl
 
 import android.net.Uri
-import android.util.Log
 import androidx.core.net.toUri
 import com.duckduckgo.app.statistics.pixels.Pixel
 import com.duckduckgo.common.utils.UrlScheme
@@ -47,7 +46,6 @@ class RealDuckPlayer @Inject constructor(
             privatePlayerMode.contains("enabled") -> Enabled
             else -> AlwaysAsk
         }
-        Log.d("Cris", "setUserpreferences overlayInteracted: $overlayInteracted, playerMode: $playerMode")
         duckPlayerFeatureRepository.setUserPreferences(UserPreferences(overlayInteracted, playerMode))
     }
 

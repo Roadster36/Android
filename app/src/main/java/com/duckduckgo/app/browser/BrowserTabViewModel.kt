@@ -3060,8 +3060,7 @@ class BrowserTabViewModel @Inject constructor(
                     val response = duckPlayerJSHelper.processJsCallbackMessage(featureName, method, id, data)
                     withContext(dispatchers.main()) {
                         response?.let {
-                            Timber.d("Cris: response: $response")
-                            command.value = SendResponseToJs(response)
+                            command.value = it
                         }
                     }
                 }

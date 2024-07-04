@@ -3055,7 +3055,7 @@ class BrowserTabViewModel @Inject constructor(
         }
 
         when (featureName) {
-            "duckPlayer" -> {
+            "duckPlayer", "duckPlayerPage" -> {
                 viewModelScope.launch {
                     val response = duckPlayerJSHelper.processJsCallbackMessage(featureName, method, id, data)
                     withContext(dispatchers.main()) {

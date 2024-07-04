@@ -17,6 +17,7 @@
 package com.duckduckgo.app.browser.duckplayer
 
 import com.duckduckgo.app.browser.commands.Command
+import com.duckduckgo.app.browser.commands.Command.SendResponseToDuckPlayer
 import com.duckduckgo.app.browser.commands.Command.SendResponseToJs
 import com.duckduckgo.app.browser.commands.NavigationCommand.Navigate
 import com.duckduckgo.duckplayer.api.DuckPlayer
@@ -27,7 +28,7 @@ import org.json.JSONObject
 class DuckPlayerJSHelper @Inject constructor(
     private val duckPlayer: DuckPlayer,
 ) {
-    suspend fun getUserPreferences(featureName: String, method: String, id: String): JsCallbackData {
+    private suspend fun getUserPreferences(featureName: String, method: String, id: String): JsCallbackData {
         val userValues = duckPlayer.getUserPreferences()
 
         return JsCallbackData(
@@ -47,13 +48,40 @@ class DuckPlayerJSHelper @Inject constructor(
         )
     }
 
-    fun setUserPreferences(data: JSONObject) {
+    private suspend fun getInitialSetup(featureName: String, method: String, id: String): JsCallbackData {
+        val userValues = duckPlayer.getUserPreferences()
+
+        return JsCallbackData(
+            JSONObject(
+                """
+                {
+                    "settings": {
+                        "pip": {
+                            "state": "enabled"
+                        }
+                    },
+                    "userValues": {
+                        "overlayInteracted": ${userValues.overlayInteracted},
+                        "privatePlayerMode": {
+                          "${userValues.privatePlayerMode.value}": {}
+                        }
+                  }
+               }
+               """,
+            ),
+            featureName,
+            method,
+            id,
+        )
+    }
+
+    private fun setUserPreferences(data: JSONObject) {
         val overlayInteracted = data.getBoolean("overlayInteracted")
         val privatePlayerModeObject = data.getJSONObject("privatePlayerMode")
         duckPlayer.setUserPreferences(overlayInteracted, privatePlayerModeObject.keys().next())
     }
 
-    fun sendDuckPlayerPixel(data: JSONObject) {
+    private fun sendDuckPlayerPixel(data: JSONObject) {
         val pixelName = data.getString("pixelName")
         val paramsMap = data.getJSONObject("params").keys().asSequence().associateWith {
             data.getJSONObject("params").getString(it)
@@ -85,6 +113,9 @@ class DuckPlayerJSHelper @Inject constructor(
                 return data?.getString("href")?.let {
                     Navigate(it, mapOf())
                 }
+            }
+            "initialSetup" -> {
+                return SendResponseToDuckPlayer(getInitialSetup(featureName, method, id ?: ""))
             }
             else -> {
                 return null

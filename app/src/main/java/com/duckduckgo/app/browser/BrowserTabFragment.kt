@@ -450,6 +450,10 @@ class BrowserTabFragment :
     lateinit var contentScopeScripts: JsMessaging
 
     @Inject
+    @Named("DuckPlayer")
+    lateinit var duckPlayerScripts: JsMessaging
+
+    @Inject
     lateinit var webContentDebugging: WebContentDebugging
 
     @Inject
@@ -1529,6 +1533,7 @@ class BrowserTabFragment :
 
             is Command.WebViewError -> showError(it.errorType, it.url)
             is Command.SendResponseToJs -> contentScopeScripts.onResponse(it.data)
+            is Command.SendResponseToDuckPlayer -> duckPlayerScripts.onResponse(it.data)
             is Command.WebShareRequest -> webShareRequest.launch(it.data)
             is Command.ScreenLock -> screenLock(it.data)
             is Command.ScreenUnlock -> screenUnlock()
@@ -2290,6 +2295,19 @@ class BrowserTabFragment :
             printInjector.addJsInterface(it) { viewModel.printFromWebView() }
             autoconsent.addJsInterface(it, autoconsentCallback)
             contentScopeScripts.register(
+                it,
+                object : JsMessageCallback() {
+                    override fun process(
+                        featureName: String,
+                        method: String,
+                        id: String?,
+                        data: JSONObject?,
+                    ) {
+                        viewModel.processJsCallbackMessage(featureName, method, id, data)
+                    }
+                },
+            )
+            duckPlayerScripts.register(
                 it,
                 object : JsMessageCallback() {
                     override fun process(

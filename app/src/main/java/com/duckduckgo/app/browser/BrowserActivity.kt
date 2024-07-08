@@ -171,6 +171,11 @@ open class BrowserActivity : DuckDuckGoActivity() {
             viewModel.onLaunchedFromNotification(it)
         }
         configureOnBackPressedListener()
+
+        val externalPkg = callingPackage ?: referrer
+        val externalInt = intent.action
+        Timber.d("Calling package: ${externalPkg.toString()}")
+        Timber.d("Calling action: ${externalInt.toString()}")
     }
 
     override fun onStop() {
@@ -200,6 +205,10 @@ open class BrowserActivity : DuckDuckGoActivity() {
         }
 
         viewModel.launchFromThirdParty()
+        val externalPkg = callingPackage ?: referrer
+        val externalInt = intent?.action
+        Timber.d("Calling package: ${externalPkg.toString()}")
+        Timber.d("Calling action: ${externalInt.toString()}")
     }
 
     private fun initializeServiceWorker() {

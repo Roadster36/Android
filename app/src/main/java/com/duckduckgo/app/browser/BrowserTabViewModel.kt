@@ -350,6 +350,7 @@ class BrowserTabViewModel @Inject constructor(
     private var autoCompleteDisposable: Disposable? = null
     private var site: Site? = null
     private lateinit var tabId: String
+    private lateinit var openerContext: OpenerContext
     private var webNavigationState: WebNavigationState? = null
     private var httpsUpgraded = false
     private val browserStateModifier = BrowserStateModifier()
@@ -359,8 +360,6 @@ class BrowserTabViewModel @Inject constructor(
     private var isProcessingTrackingLink = false
     private var isLinkOpenedInNewTab = false
     private var allowlistRefreshTriggerJob: Job? = null
-    private var userRefreshCount: Int = 0
-    private var openerContext: OpenerContext? = null
 
     private val fireproofWebsitesObserver = Observer<List<FireproofWebsiteEntity>> {
         browserViewState.value = currentBrowserViewState().copy(isFireproofWebsite = isFireproofWebsite())
@@ -515,11 +514,16 @@ class BrowserTabViewModel @Inject constructor(
         tabId: String,
         initialUrl: String?,
         skipHome: Boolean,
+        isExternal: Boolean,
     ) {
         this.tabId = tabId
         this.skipHome = skipHome
         siteLiveData = tabRepository.retrieveSiteData(tabId)
         site = siteLiveData.value
+        if (isExternal) {
+            this.openerContext = OpenerContext.EXTERNAL
+            site?.openerContext = OpenerContext.EXTERNAL
+        }
 
         initialUrl?.let { buildSiteFactory(it) }
     }

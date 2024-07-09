@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.duckduckgo.browser.api
+package com.duckduckgo.app.browser
 
 import android.webkit.WebView
 import com.duckduckgo.app.global.model.Site
+import com.duckduckgo.browser.api.JsInjectorPlugin
 import timber.log.Timber
 
 class DocumentReferrerScriptJsInjectorPlugin : JsInjectorPlugin {
@@ -36,9 +37,9 @@ class DocumentReferrerScriptJsInjectorPlugin : JsInjectorPlugin {
     ) {
         if (url != "about:blank") {
             webView.evaluateJavascript("document.referrer") { referrer ->
-                Timber.d("Referrer: $referrer")
+                Timber.d("OpenerContext referrer: $referrer")
                 site?.inferLoadContext(referrer)
-                Timber.d("Site context inferred from referrer: ${site?.openerContext?.context ?: "nope"}")
+                Timber.d("OpenerContext inferred from referrer: ${site?.openerContext?.context ?: "nope"}")
             }
         }
     }

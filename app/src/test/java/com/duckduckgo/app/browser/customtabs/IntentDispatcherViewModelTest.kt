@@ -45,7 +45,7 @@ class IntentDispatcherViewModelTest {
         whenever(mockIntent.getIntExtra(CustomTabsIntent.EXTRA_TOOLBAR_COLOR, 0)).thenReturn(toolbarColor)
         whenever(mockIntent.intentText).thenReturn(text)
 
-        testee.onIntentReceived(mockIntent, DEFAULT_COLOR)
+        testee.onIntentReceived(mockIntent, DEFAULT_COLOR, isExternal = false)
 
         testee.viewState.test {
             val state = awaitItem()
@@ -61,7 +61,7 @@ class IntentDispatcherViewModelTest {
         configureHasSession(false)
         whenever(mockIntent.intentText).thenReturn(text)
 
-        testee.onIntentReceived(mockIntent, DEFAULT_COLOR)
+        testee.onIntentReceived(mockIntent, DEFAULT_COLOR, isExternal = false)
 
         testee.viewState.test {
             val state = awaitItem()
@@ -76,7 +76,7 @@ class IntentDispatcherViewModelTest {
         configureHasSession(true)
         configureIsEmailProtectionLink(true)
 
-        testee.onIntentReceived(mockIntent, DEFAULT_COLOR)
+        testee.onIntentReceived(mockIntent, DEFAULT_COLOR, isExternal = false)
 
         testee.viewState.test {
             val state = awaitItem()
@@ -89,7 +89,7 @@ class IntentDispatcherViewModelTest {
         configureHasSession(true)
         configureIsEmailProtectionLink(false)
 
-        testee.onIntentReceived(mockIntent, DEFAULT_COLOR)
+        testee.onIntentReceived(mockIntent, DEFAULT_COLOR, isExternal = false)
 
         testee.viewState.test {
             val state = awaitItem()
@@ -110,7 +110,7 @@ class IntentDispatcherViewModelTest {
         whenever(mockIntent.intentText).thenReturn(urlWithSpaces)
         configureHasSession(true)
 
-        testee.onIntentReceived(mockIntent, DEFAULT_COLOR)
+        testee.onIntentReceived(mockIntent, DEFAULT_COLOR, isExternal = false)
 
         testee.viewState.test {
             val state = awaitItem()
@@ -129,7 +129,7 @@ class IntentDispatcherViewModelTest {
         configureHasSession(false)
         configureIsEmailProtectionLink(false)
 
-        testee.onIntentReceived(mockIntent, DEFAULT_COLOR)
+        testee.onIntentReceived(mockIntent, DEFAULT_COLOR, isExternal = false)
 
         testee.viewState.test {
             val state = awaitItem()
@@ -147,7 +147,7 @@ class IntentDispatcherViewModelTest {
         whenever(mockIntent.intentText).thenReturn(intentTextWithSpaces)
         configureHasSession(true)
 
-        testee.onIntentReceived(mockIntent, DEFAULT_COLOR)
+        testee.onIntentReceived(mockIntent, DEFAULT_COLOR, isExternal = false)
 
         testee.viewState.test {
             val state = awaitItem()

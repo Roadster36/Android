@@ -20,6 +20,7 @@ import android.net.Uri
 import com.duckduckgo.duckplayer.api.PrivatePlayerMode.AlwaysAsk
 import com.duckduckgo.duckplayer.api.PrivatePlayerMode.Disabled
 import com.duckduckgo.duckplayer.api.PrivatePlayerMode.Enabled
+import kotlinx.coroutines.flow.Flow
 
 const val DUCK_PLAYER_ASSETS_PATH = "duckplayer/index.html"
 
@@ -27,6 +28,9 @@ const val DUCK_PLAYER_ASSETS_PATH = "duckplayer/index.html"
  * DuckPlayer interface provides a set of methods for interacting with the DuckPlayer.
  */
 interface DuckPlayer {
+
+    fun isDuckPlayerAvailable(): Boolean
+
     /**
      * Sends a pixel with the given name and data.
      *
@@ -41,6 +45,13 @@ interface DuckPlayer {
      * @return The user values.
      */
     suspend fun getUserPreferences(): UserPreferences
+
+    /**
+     * Retrieves a flow of user preferences.
+     *
+     * @return The flow user preferences.
+     */
+    fun observeUserPreferences(): Flow<UserPreferences>
 
     /**
      * Sets the user preferences.

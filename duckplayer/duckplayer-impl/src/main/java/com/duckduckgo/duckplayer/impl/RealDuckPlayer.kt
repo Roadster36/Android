@@ -28,14 +28,23 @@ import com.duckduckgo.duckplayer.api.PrivatePlayerMode.Disabled
 import com.duckduckgo.duckplayer.api.PrivatePlayerMode.Enabled
 import com.squareup.anvil.annotations.ContributesBinding
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 private const val YOUTUBE_NO_COOKIE_HOST = "youtube-nocookie.com"
+private const val YOUTUBE_HOST = "youtube.com"
+private const val YOUTUBE_MOBILE_HOST = "m.youtube.com"
 
 @ContributesBinding(AppScope::class)
 class RealDuckPlayer @Inject constructor(
     private val duckPlayerFeatureRepository: DuckPlayerFeatureRepository,
+    private val duckPlayerFeature: DuckPlayerFeature,
     private val pixel: Pixel,
 ) : DuckPlayer {
+
+    override fun isDuckPlayerAvailable(): Boolean {
+        return duckPlayerFeature.self().isEnabled()
+    }
 
     override fun setUserPreferences(
         overlayInteracted: Boolean,
@@ -51,6 +60,12 @@ class RealDuckPlayer @Inject constructor(
 
     override suspend fun getUserPreferences(): UserPreferences {
         return duckPlayerFeatureRepository.getUserPreferences().let {
+            UserPreferences(it.overlayInteracted, it.privatePlayerMode)
+        }
+    }
+
+    override fun observeUserPreferences(): Flow<UserPreferences> {
+        return duckPlayerFeatureRepository.observeUserPreferences().map {
             UserPreferences(it.overlayInteracted, it.privatePlayerMode)
         }
     }

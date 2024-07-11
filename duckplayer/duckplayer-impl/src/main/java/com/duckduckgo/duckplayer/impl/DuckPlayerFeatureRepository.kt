@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 interface DuckPlayerFeatureRepository {
     fun getDuckPlayerRemoteConfigJson(): String
 
-    fun setDuckPlayerRC(jsonString: String)
+    fun setDuckPlayerRemoteConfigJson(jsonString: String)
 
     suspend fun getUserPreferences(): UserPreferences
 
@@ -62,7 +62,7 @@ class RealDuckPlayerFeatureRepository @Inject constructor(
         return duckPlayerRC
     }
 
-    override fun setDuckPlayerRC(jsonString: String) {
+    override fun setDuckPlayerRemoteConfigJson(jsonString: String) {
         appCoroutineScope.launch(dispatcherProvider.io()) {
             duckPlayerDataStore.setDuckPlayerRemoteConfigJson(jsonString)
             loadToMemory()

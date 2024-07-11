@@ -29,7 +29,7 @@ class DuckPlayerFeaturePlugin @Inject constructor(
 
     override fun store(featureName: String, jsonString: String): Boolean {
         if (featureName == this.featureName) {
-            duckPlayerFeatureRepository.setDuckPlayerRC(jsonString)
+            duckPlayerFeatureRepository.setDuckPlayerRemoteConfigJson(jsonString)
             return true
         }
         return false

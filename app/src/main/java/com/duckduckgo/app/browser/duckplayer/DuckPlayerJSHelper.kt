@@ -26,6 +26,11 @@ import com.duckduckgo.js.messaging.api.JsCallbackData
 import javax.inject.Inject
 import org.json.JSONObject
 
+const val DUCK_PLAYER_PAGE_FEATURE_NAME = "duckPlayerPage"
+const val DUCK_PLAYER_FEATURE_NAME = "duckPlayer"
+private const val OVERLAY_INTERACTED = "overlayInteracted"
+private const val PRIVATE_PLAYER_MODE = "privatePlayerMode"
+
 class DuckPlayerJSHelper @Inject constructor(
     private val duckPlayer: DuckPlayer,
     private val appBuildConfig: AppBuildConfig,
@@ -37,8 +42,8 @@ class DuckPlayerJSHelper @Inject constructor(
             JSONObject(
                 """
                 {
-                    "overlayInteracted": ${userValues.overlayInteracted},
-                    "privatePlayerMode": {
+                    $OVERLAY_INTERACTED: ${userValues.overlayInteracted},
+                    $PRIVATE_PLAYER_MODE: {
                       "${userValues.privatePlayerMode.value}": {}
                     }
                   }
@@ -62,8 +67,8 @@ class DuckPlayerJSHelper @Inject constructor(
                         }
                     },
                     "userValues": {
-                        "overlayInteracted": ${userValues.overlayInteracted},
-                        "privatePlayerMode": {
+                        $OVERLAY_INTERACTED: ${userValues.overlayInteracted},
+                        $PRIVATE_PLAYER_MODE: {
                           "${userValues.privatePlayerMode.value}": {}
                         }
                   }
@@ -71,7 +76,7 @@ class DuckPlayerJSHelper @Inject constructor(
                """,
         )
 
-        if (featureName == "duckPlayerPage") {
+        if (featureName == DUCK_PLAYER_PAGE_FEATURE_NAME) {
             jsonObject.put("platform", JSONObject("""{ name: "android" }"""))
             jsonObject.put("locale", java.util.Locale.getDefault().language)
             jsonObject.put("env", if (appBuildConfig.isDebug) "development" else "production")
@@ -86,8 +91,8 @@ class DuckPlayerJSHelper @Inject constructor(
     }
 
     private fun setUserPreferences(data: JSONObject) {
-        val overlayInteracted = data.getBoolean("overlayInteracted")
-        val privatePlayerModeObject = data.getJSONObject("privatePlayerMode")
+        val overlayInteracted = data.getBoolean(OVERLAY_INTERACTED)
+        val privatePlayerModeObject = data.getJSONObject(PRIVATE_PLAYER_MODE)
         duckPlayer.setUserPreferences(overlayInteracted, privatePlayerModeObject.keys().next())
     }
 

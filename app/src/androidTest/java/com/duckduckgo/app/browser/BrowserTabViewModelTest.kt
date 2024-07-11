@@ -158,6 +158,7 @@ import com.duckduckgo.app.trackerdetection.model.TrackerType
 import com.duckduckgo.app.trackerdetection.model.TrackingEvent
 import com.duckduckgo.app.usage.search.SearchCountDao
 import com.duckduckgo.app.widget.ui.WidgetCapabilities
+import com.duckduckgo.appbuildconfig.api.AppBuildConfig
 import com.duckduckgo.autofill.api.AutofillCapabilityChecker
 import com.duckduckgo.autofill.api.domain.app.LoginCredentials
 import com.duckduckgo.autofill.api.email.EmailManager
@@ -396,6 +397,9 @@ class BrowserTabViewModelTest {
     @Mock
     private lateinit var mockDuckPlayer: DuckPlayer
 
+    @Mock
+    private lateinit var mockAppBuildConfig: AppBuildConfig
+
     private lateinit var remoteMessagingModel: RemoteMessagingModel
 
     private val lazyFaviconManager = Lazy { mockFaviconManager }
@@ -559,6 +563,7 @@ class BrowserTabViewModelTest {
         whenever(fireproofDialogsEventHandler.event).thenReturn(fireproofDialogsEventHandlerLiveData)
         whenever(cameraHardwareChecker.hasCameraHardware()).thenReturn(true)
         whenever(mockPrivacyProtectionsPopupManager.viewState).thenReturn(flowOf(PrivacyProtectionsPopupViewState.Gone))
+        whenever(mockAppBuildConfig.buildType).thenReturn("debug")
 
         testee = BrowserTabViewModel(
             statisticsUpdater = mockStatisticsUpdater,
@@ -624,7 +629,7 @@ class BrowserTabViewModelTest {
             history = mockNavigationHistory,
             commandActionMapper = commandActionMapper,
             duckPlayer = mockDuckPlayer,
-            duckPlayerJSHelper = DuckPlayerJSHelper(mockDuckPlayer),
+            duckPlayerJSHelper = DuckPlayerJSHelper(mockDuckPlayer, mockAppBuildConfig),
         )
 
         testee.loadData("abc", null, false)

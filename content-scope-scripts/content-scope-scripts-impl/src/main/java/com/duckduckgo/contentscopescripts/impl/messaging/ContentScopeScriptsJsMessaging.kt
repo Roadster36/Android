@@ -58,7 +58,7 @@ class ContentScopeScriptsJsMessaging @Inject constructor(
     override val secret: String = coreContentScopeScripts.secret
     override val allowedDomains: List<String> = emptyList()
 
-    private val handlers: List<JsMessageHandler> = listOf(ContentScopeHandler(), DuckPlayerHandler(), DuckPlayerPageHandler())
+    private val handlers: List<JsMessageHandler> = listOf(ContentScopeHandler(), DuckPlayerHandler())
 
     @JavascriptInterface
     override fun process(message: String, secret: String) {
@@ -129,16 +129,5 @@ class ContentScopeScriptsJsMessaging @Inject constructor(
         override val allowedDomains: List<String> = emptyList()
         override val featureName: String = "duckPlayer"
         override val methods: List<String> = listOf("getUserValues", "sendDuckPlayerPixel", "setUserValues", "openDuckPlayer")
-    }
-
-    inner class DuckPlayerPageHandler : JsMessageHandler {
-        override fun process(jsMessage: JsMessage, secret: String, jsMessageCallback: JsMessageCallback?) {
-            if (jsMessage.id == null) return
-            jsMessageCallback?.process(featureName, jsMessage.method, jsMessage.id ?: "", jsMessage.params)
-        }
-
-        override val allowedDomains: List<String> = emptyList()
-        override val featureName: String = "duckPlayerPage"
-        override val methods: List<String> = listOf("initialSetup")
     }
 }

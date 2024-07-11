@@ -114,7 +114,7 @@ class WebViewRequestInterceptor(
 
         if (appUrlPixel(url)) return null
 
-        if (duckPlayer.isDuckPlayerUri(url)) {
+        if (url != null && duckPlayer.isDuckPlayerUri(url)) {
             withContext(dispatchers.main()) {
                 duckPlayer.createYoutubeNoCookieFromDuckPlayer(url)?.let { youtubeUrl ->
                     webView.loadUrl(youtubeUrl)
@@ -123,7 +123,7 @@ class WebViewRequestInterceptor(
             return WebResourceResponse(null, null, null)
         }
 
-        if (duckPlayer.isYoutubeNoCookie(url)) {
+        if (url != null && duckPlayer.isYoutubeNoCookie(url)) {
             val path = duckPlayer.getDuckPlayerAssetsPath(request.url)
             val mimeType = mimeTypeMap.getMimeTypeFromExtension(path?.substringAfterLast("."))
 

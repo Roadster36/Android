@@ -63,15 +63,15 @@ class RealDuckPlayer @Inject constructor(
         pixel.fire(androidPixelName, pixelData)
     }
 
-    override fun createYoutubeNoCookieFromDuckPlayer(uri: Uri?): String? {
-        uri?.pathSegments?.firstOrNull()?.let { videoID ->
+    override fun createYoutubeNoCookieFromDuckPlayer(uri: Uri): String? {
+        uri.pathSegments?.firstOrNull()?.let { videoID ->
             return "https://$YOUTUBE_NO_COOKIE_HOST?videoID=$videoID"
         }
         return null
     }
 
-    override fun isDuckPlayerUri(uri: Uri?): Boolean {
-        if (uri?.normalizeScheme()?.scheme != UrlScheme.duck) return false
+    override fun isDuckPlayerUri(uri: Uri): Boolean {
+        if (uri.normalizeScheme()?.scheme != UrlScheme.duck) return false
         if (uri.userInfo != null) return false
         uri.host?.let { host ->
             if (!host.contains("player")) return false
@@ -80,20 +80,20 @@ class RealDuckPlayer @Inject constructor(
         return false
     }
 
-    override fun isDuckPlayerUri(uri: String?): Boolean {
-        return isDuckPlayerUri(uri?.toUri())
+    override fun isDuckPlayerUri(uri: String): Boolean {
+        return isDuckPlayerUri(uri.toUri())
     }
 
-    override fun isYoutubeNoCookie(uri: Uri?): Boolean {
-        return uri?.host == YOUTUBE_NO_COOKIE_HOST
+    override fun isYoutubeNoCookie(uri: Uri): Boolean {
+        return uri.host == YOUTUBE_NO_COOKIE_HOST
     }
 
-    override fun isYoutubeNoCookie(uri: String?): Boolean {
-        return isYoutubeNoCookie(uri?.toUri())
+    override fun isYoutubeNoCookie(uri: String): Boolean {
+        return isYoutubeNoCookie(uri.toUri())
     }
 
-    override fun getDuckPlayerAssetsPath(url: Uri?): String? {
-        return url?.path?.takeIf { it.isNotBlank() }?.removePrefix("/")?.let { "duckplayer/$it" }
+    override fun getDuckPlayerAssetsPath(url: Uri): String? {
+        return url.path?.takeIf { it.isNotBlank() }?.removePrefix("/")?.let { "duckplayer/$it" }
     }
 
     override fun createDuckPlayerUriFromYoutubeNoCookie(uri: Uri): String {

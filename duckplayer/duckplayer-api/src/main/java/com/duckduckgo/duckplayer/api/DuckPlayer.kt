@@ -64,7 +64,7 @@ interface DuckPlayer {
      * @param uri The DuckPlayer URI.
      * @return The YouTube no-cookie URI.
      */
-    fun createYoutubeNoCookieFromDuckPlayer(uri: Uri?): String?
+    fun createYoutubeNoCookieFromDuckPlayer(uri: Uri): String?
 
     /**
      * Checks if a URI is a DuckPlayer URI.
@@ -72,7 +72,7 @@ interface DuckPlayer {
      * @param uri The URI to check.
      * @return True if the URI is a DuckPlayer URI, false otherwise.
      */
-    fun isDuckPlayerUri(uri: Uri?): Boolean
+    fun isDuckPlayerUri(uri: Uri): Boolean
 
     /**
      * Checks if a string is a DuckPlayer URI.
@@ -80,7 +80,7 @@ interface DuckPlayer {
      * @param uri The string to check.
      * @return True if the string is a DuckPlayer URI, false otherwise.
      */
-    fun isDuckPlayerUri(uri: String?): Boolean
+    fun isDuckPlayerUri(uri: String): Boolean
 
     /**
      * Checks if a URI is a YouTube no-cookie URI.
@@ -88,7 +88,7 @@ interface DuckPlayer {
      * @param uri The URI to check.
      * @return True if the URI is a YouTube no-cookie URI, false otherwise.
      */
-    fun isYoutubeNoCookie(uri: Uri?): Boolean
+    fun isYoutubeNoCookie(uri: Uri): Boolean
 
     /**
      * Checks if a string is a YouTube no-cookie URI.
@@ -96,7 +96,7 @@ interface DuckPlayer {
      * @param uri The string to check.
      * @return True if the string is a YouTube no-cookie URI, false otherwise.
      */
-    fun isYoutubeNoCookie(uri: String?): Boolean
+    fun isYoutubeNoCookie(uri: String): Boolean
 
     /**
      * Retrieves the duck player assets path from a URI.
@@ -104,7 +104,7 @@ interface DuckPlayer {
      * @param url The URI to retrieve the path from.
      * @return The path of the URI.
      */
-    fun getDuckPlayerAssetsPath(url: Uri?): String?
+    fun getDuckPlayerAssetsPath(url: Uri): String?
 
     /**
      * Data class representing user preferences for Duck Player.

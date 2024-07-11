@@ -25,7 +25,7 @@ import com.duckduckgo.feature.toggles.api.Toggle
     featureName = "duckPlayer",
 )
 /**
- * This is the class that represents the voiceSearch feature flags
+ * This is the class that represents the duckPlayer feature flags
  */
 interface DuckPlayerFeature {
     /**

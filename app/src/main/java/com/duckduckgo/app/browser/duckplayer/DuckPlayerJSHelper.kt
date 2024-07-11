@@ -20,6 +20,7 @@ import com.duckduckgo.app.browser.commands.Command
 import com.duckduckgo.app.browser.commands.Command.SendResponseToDuckPlayer
 import com.duckduckgo.app.browser.commands.Command.SendResponseToJs
 import com.duckduckgo.app.browser.commands.NavigationCommand.Navigate
+import com.duckduckgo.appbuildconfig.api.AppBuildConfig
 import com.duckduckgo.duckplayer.api.DuckPlayer
 import com.duckduckgo.js.messaging.api.JsCallbackData
 import javax.inject.Inject
@@ -27,6 +28,7 @@ import org.json.JSONObject
 
 class DuckPlayerJSHelper @Inject constructor(
     private val duckPlayer: DuckPlayer,
+    private val appBuildConfig: AppBuildConfig,
 ) {
     private suspend fun getUserPreferences(featureName: String, method: String, id: String): JsCallbackData {
         val userValues = duckPlayer.getUserPreferences()
@@ -51,9 +53,8 @@ class DuckPlayerJSHelper @Inject constructor(
     private suspend fun getInitialSetup(featureName: String, method: String, id: String): JsCallbackData {
         val userValues = duckPlayer.getUserPreferences()
 
-        return JsCallbackData(
-            JSONObject(
-                """
+        val jsonObject = JSONObject(
+            """
                 {
                     "settings": {
                         "pip": {
@@ -68,7 +69,16 @@ class DuckPlayerJSHelper @Inject constructor(
                   }
                }
                """,
-            ),
+        )
+
+        if (featureName == "duckPlayerPage") {
+            jsonObject.put("platform", JSONObject("""{ name: "android" }"""))
+            jsonObject.put("locale", java.util.Locale.getDefault().language)
+            jsonObject.put("env", if (appBuildConfig.isDebug) "development" else "production")
+        }
+
+        return JsCallbackData(
+            jsonObject,
             featureName,
             method,
             id,

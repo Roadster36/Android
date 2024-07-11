@@ -107,8 +107,3 @@ class RealDuckPlayerFeatureRepository @Inject constructor(
         )
     }
 }
-
-// If link clicked in YT - will get openDuckPlayer
-// Every other case, I need to intercept call to YT.com and openDuckPlayer directly
-// If link clicked in anywhere else - will not get openDuckPlayer, need to handle
-// If direct navigation to YT or redirection - will not get openDuckPlayer, need to handle

@@ -99,6 +99,12 @@ class RealDuckPlayer @Inject constructor(
         return isDuckPlayerUri(uri.toUri())
     }
 
+    override fun isDuckPlayerSettingsUri(uri: Uri?): Boolean {
+        if (uri?.normalizeScheme()?.scheme != UrlScheme.duck) return false
+        if (uri.userInfo != null) return false
+        return uri.host == "settings" && uri.pathSegments.firstOrNull() == "duckplayer"
+    }
+
     override fun isYoutubeNoCookie(uri: Uri): Boolean {
         return uri.host == YOUTUBE_NO_COOKIE_HOST
     }
@@ -111,7 +117,16 @@ class RealDuckPlayer @Inject constructor(
         return url.path?.takeIf { it.isNotBlank() }?.removePrefix("/")?.let { "duckplayer/$it" }
     }
 
+    override fun isYoutubeWatchUrl(uri: Uri): Boolean {
+        val host = uri.host?.removePrefix("www.")
+        return (host == YOUTUBE_HOST || host == YOUTUBE_MOBILE_HOST) && uri.pathSegments.firstOrNull() == "watch"
+    }
+
     override fun createDuckPlayerUriFromYoutubeNoCookie(uri: Uri): String {
         return "${UrlScheme.duck}://player/${uri.getQueryParameter("videoID")}"
+    }
+
+    override fun createDuckPlayerUriFromYoutube(uri: Uri): String {
+        return "${UrlScheme.duck}://player/${uri.getQueryParameter("v")}"
     }
 }

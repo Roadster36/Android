@@ -39,6 +39,7 @@ import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
+import timber.log.Timber
 
 @ContributesBinding(FragmentScope::class)
 @Named("ContentScopeScripts")
@@ -69,6 +70,7 @@ class ContentScopeScriptsJsMessaging @Inject constructor(
                 webView.url?.toUri()?.host
             }
             jsMessage?.let {
+                Timber.d("Cris Processing message: $it")
                 if (this.secret == secret && context == jsMessage.context && (allowedDomains.isEmpty() || allowedDomains.contains(domain))) {
                     handlers.firstOrNull {
                         it.methods.contains(jsMessage.method) && it.featureName == jsMessage.featureName
@@ -128,6 +130,6 @@ class ContentScopeScriptsJsMessaging @Inject constructor(
 
         override val allowedDomains: List<String> = emptyList()
         override val featureName: String = "duckPlayer"
-        override val methods: List<String> = listOf("getUserValues", "sendDuckPlayerPixel", "setUserValues", "openDuckPlayer")
+        override val methods: List<String> = listOf("getUserValues", "sendDuckPlayerPixel", "setUserValues", "openDuckPlayer", "initialSetup")
     }
 }

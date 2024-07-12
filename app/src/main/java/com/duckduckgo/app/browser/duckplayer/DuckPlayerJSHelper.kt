@@ -130,7 +130,17 @@ class DuckPlayerJSHelper @Inject constructor(
                 }
             }
             "initialSetup" -> {
-                return SendResponseToDuckPlayer(getInitialSetup(featureName, method, id ?: ""))
+                return when (featureName) {
+                    DUCK_PLAYER_FEATURE_NAME -> {
+                        SendResponseToJs(getInitialSetup(featureName, method, id ?: ""))
+                    }
+                    DUCK_PLAYER_PAGE_FEATURE_NAME -> {
+                        SendResponseToDuckPlayer(getInitialSetup(featureName, method, id ?: ""))
+                    }
+                    else -> {
+                        null
+                    }
+                }
             }
             else -> {
                 return null

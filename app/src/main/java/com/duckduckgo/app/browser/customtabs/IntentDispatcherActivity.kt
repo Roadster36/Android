@@ -46,7 +46,7 @@ class IntentDispatcherActivity : DuckDuckGoActivity() {
         }.launchIn(lifecycleScope)
 
         val surfaceColor = getColorFromAttr(com.duckduckgo.mobile.android.R.attr.daxColorSurface)
-        Timber.d("isExternal set to true + passed to intentDispatcher viewModel")
+        Timber.d("OpenerContext -> isExternal set to true + passed to intentDispatcher viewModel")
         viewModel.onIntentReceived(intent, surfaceColor, isExternal = true)
     }
 

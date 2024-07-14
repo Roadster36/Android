@@ -394,6 +394,9 @@ class BrowserTabViewModelTest {
     private lateinit var mockSurveyRepository: SurveyRepository
 
     @Mock
+    private lateinit var mockDuckDuckGoUrlDetector: DuckDuckGoUrlDetector
+
+    @Mock
     private lateinit var mockFileChooserCallback: ValueCallback<Array<Uri>>
 
     private lateinit var remoteMessagingModel: RemoteMessagingModel
@@ -543,6 +546,7 @@ class BrowserTabViewModelTest {
             mockBypassedSSLCertificatesRepository,
             coroutineRule.testScope,
             coroutineRule.testDispatcherProvider,
+            mockDuckDuckGoUrlDetector,
         )
 
         accessibilitySettingsDataStore = AccessibilitySettingsSharedPreferences(
@@ -5048,15 +5052,12 @@ class BrowserTabViewModelTest {
     }
 
     @Test
-    fun whenReferrerIsPresentThenOpenerContextIsCorrectlyAssigned() = runTest {
-        testee.inferLoadContext(referrer = "https://www.duckduckgo.com/?q=duck")
-        assertEquals(OpenerContext.SERP, mockSiteMonitor.openerContext)
-        testee.inferLoadContext(referrer = "http://m.example.com/menu")
-        assertEquals(OpenerContext.NAVIGATION, mockSiteMonitor.openerContext)
-        testee.inferLoadContext(referrer = "myapp://open/home?screen=profile&userId=123")
+    fun whenLaunchedFromOutsideAppThenOpenerContextIsCorrectlyAssignedExternal() = runTest {
+        testee.handleExternalLaunch(isExternal = false)
+        verify(mockSiteMonitor, never()).setExternalOpenerContext()
+        testee.handleExternalLaunch(isExternal = true)
+        verify(mockSiteMonitor).setExternalOpenerContext()
         assertEquals(OpenerContext.EXTERNAL, mockSiteMonitor.openerContext)
-        testee.inferLoadContext(referrer = null)
-        assertEquals(null, mockSiteMonitor.openerContext)
     }
 
     @Test

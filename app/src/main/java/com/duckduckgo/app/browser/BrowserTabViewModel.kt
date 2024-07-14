@@ -514,16 +514,11 @@ class BrowserTabViewModel @Inject constructor(
         tabId: String,
         initialUrl: String?,
         skipHome: Boolean,
-        isExternal: Boolean,
     ) {
         this.tabId = tabId
         this.skipHome = skipHome
         siteLiveData = tabRepository.retrieveSiteData(tabId)
         site = siteLiveData.value
-        if (isExternal) {
-            this.openerContext = OpenerContext.EXTERNAL
-            site?.openerContext = OpenerContext.EXTERNAL
-        }
 
         initialUrl?.let { buildSiteFactory(it) }
     }
@@ -1003,6 +998,14 @@ class BrowserTabViewModel @Inject constructor(
         }
     }
 
+    fun handleExternalLaunch(isExternal: Boolean) {
+        if (isExternal) {
+            Timber.d("OpenerContext: onLaunchedFromExternalApp called in BTVM for $url")
+            site?.setExternalOpenerContext()
+            Timber.d("OpenerContext: setExternalOpenerContext called in BTVM for $url, OpenerContext now ${site?.openerContext}")
+        }
+    }
+
     /**
      * Handles back navigation. Returns false if navigation could not be
      * handled at this level, giving system an opportunity to handle it
@@ -1335,6 +1338,7 @@ class BrowserTabViewModel @Inject constructor(
         onSiteChanged()
         val currentOmnibarViewState = currentOmnibarViewState()
         val omnibarText = omnibarTextForUrl(url)
+        Timber.d("OpenerContext: urlUpdated called in BTVM for $url")
         omnibarViewState.postValue(
             currentOmnibarViewState.copy(
                 omnibarText = omnibarText,
@@ -1731,7 +1735,6 @@ class BrowserTabViewModel @Inject constructor(
             }
             Timber.i("Shield: privacyProtection $privacyProtection")
             withContext(dispatchers.main()) {
-                siteLiveData.value = site
                 privacyShieldViewState.value = currentPrivacyShieldState().copy(privacyShield = privacyProtection)
             }
             withContext(dispatchers.io()) {

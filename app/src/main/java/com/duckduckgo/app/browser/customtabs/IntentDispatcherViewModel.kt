@@ -58,7 +58,7 @@ class IntentDispatcherViewModel @Inject constructor(
                 val customTabRequested = hasSession && !isEmailProtectionLink
 
                 Timber.d("Intent $intent received. Has extra session=$hasSession. Intent text=$intentText. Toolbar color=$toolbarColor")
-                Timber.d("isExternal set to TRUE")
+                Timber.d("OpenerContext -> isExternal set to TRUE")
 
                 customTabDetector.setCustomTab(false)
                 _viewState.emit(

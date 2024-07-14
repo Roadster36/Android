@@ -19,9 +19,13 @@ package com.duckduckgo.app.browser
 import android.webkit.WebView
 import com.duckduckgo.app.global.model.Site
 import com.duckduckgo.browser.api.JsInjectorPlugin
+import com.duckduckgo.di.scopes.AppScope
+import com.squareup.anvil.annotations.ContributesMultibinding
 import timber.log.Timber
+import javax.inject.Inject
 
-class DocumentReferrerScriptJsInjectorPlugin : JsInjectorPlugin {
+@ContributesMultibinding(AppScope::class)
+class DocumentReferrerScriptJsInjectorPlugin @Inject constructor(): JsInjectorPlugin {
     override fun onPageStarted(
         webView: WebView,
         url: String?,
@@ -37,8 +41,9 @@ class DocumentReferrerScriptJsInjectorPlugin : JsInjectorPlugin {
     ) {
         if (url != "about:blank") {
             webView.evaluateJavascript("document.referrer") { referrer ->
-                Timber.d("OpenerContext referrer: $referrer")
-                site?.inferLoadContext(referrer)
+                val sanitizedReferrer = referrer?.removeSurrounding("\"")
+                Timber.d("OpenerContext referrer: $sanitizedReferrer")
+                site?.inferOpenerContext(sanitizedReferrer)
                 Timber.d("OpenerContext inferred from referrer: ${site?.openerContext?.context ?: "nope"}")
             }
         }

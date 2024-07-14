@@ -174,23 +174,17 @@ class SiteMonitor(
     override fun inferOpenerContext(
         referrer: String?
     ) {
-        Timber.d("Referrer: $referrer received in inferOpenerContext")
+        println("Referrer: $referrer received in inferOpenerContext")
         if (openerContext == null && referrer != null) {
-            Timber.d("OpenerContext -> referrer is NOT null: $referrer, openerContext ")
+            Timber.d("OpenerContext -> referrer is NOT null: $referrer, openerContext IS null")
             openerContext = when {
                 duckDuckGoUrlDetector.isDuckDuckGoUrl(referrer) -> OpenerContext.SERP
                 referrer.toUri().isHttp || referrer.toUri().isHttps -> OpenerContext.NAVIGATION
                 else -> return
             }
-            Timber.d("OpenerContext -> referrer: $referrer, isDDGurl: ${duckDuckGoUrlDetector.isDuckDuckGoUrl(referrer)}," +
-                " url.toHttpUrl=${url.toHttpUrl()}, url.toHttpUrl.topPrivDom=${url.toHttpUrl().topPrivateDomain()}")
-            Timber.d("OpenerContext -> referrer.contains(ddg): ${referrer.contains("duckduckgo")}, " +
-                "referrer.contains(http): ${referrer.contains("http")}")
-            Timber.d("OpenerContext -> referrer: $referrer, isHttps: ${referrer.toUri().isHttps}, " +
-                "referrer URI:${referrer.toUri()}, referrer URI scheme: ${referrer.toUri().scheme}")
             Timber.d("OpenerContext assigned: ${openerContext?.context} from referrer: $referrer")
         } else {
-            Timber.d("OpenerContext not assigned bc either referrer=null ($referrer) or openerContext=external ($openerContext)")
+            Timber.d("OpenerContext not assigned bc either referrer=null -> ($referrer) or openerContext=external -> ($openerContext)")
         }
     }
 

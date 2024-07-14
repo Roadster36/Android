@@ -350,7 +350,6 @@ class BrowserTabViewModel @Inject constructor(
     private var autoCompleteDisposable: Disposable? = null
     private var site: Site? = null
     private lateinit var tabId: String
-    private lateinit var openerContext: OpenerContext
     private var webNavigationState: WebNavigationState? = null
     private var httpsUpgraded = false
     private val browserStateModifier = BrowserStateModifier()
@@ -1338,7 +1337,6 @@ class BrowserTabViewModel @Inject constructor(
         onSiteChanged()
         val currentOmnibarViewState = currentOmnibarViewState()
         val omnibarText = omnibarTextForUrl(url)
-        Timber.d("OpenerContext: urlUpdated called in BTVM for $url")
         omnibarViewState.postValue(
             currentOmnibarViewState.copy(
                 omnibarText = omnibarText,
@@ -1735,6 +1733,7 @@ class BrowserTabViewModel @Inject constructor(
             }
             Timber.i("Shield: privacyProtection $privacyProtection")
             withContext(dispatchers.main()) {
+                siteLiveData.value = site
                 privacyShieldViewState.value = currentPrivacyShieldState().copy(privacyShield = privacyProtection)
             }
             withContext(dispatchers.io()) {

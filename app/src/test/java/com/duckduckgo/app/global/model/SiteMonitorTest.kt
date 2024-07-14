@@ -30,6 +30,7 @@ import com.duckduckgo.app.trackerdetection.model.Entity
 import com.duckduckgo.app.trackerdetection.model.TrackerStatus
 import com.duckduckgo.app.trackerdetection.model.TrackerType
 import com.duckduckgo.app.trackerdetection.model.TrackingEvent
+import com.duckduckgo.browser.api.brokensite.BrokenSiteData.OpenerContext
 import com.duckduckgo.common.test.CoroutineTestRule
 import com.duckduckgo.privacy.config.api.ContentBlocking
 import org.junit.Assert
@@ -649,6 +650,72 @@ class SiteMonitorTest {
         )
         testee.onUserTriggeredRefresh()
         assertEquals(1, testee.userRefreshCount)
+    }
+
+    @Test
+    fun whenSiteCreatedThenOpenerContextIsNull() {
+        val testee = SiteMonitor(
+            url = document,
+            title = null,
+            userAllowListRepository = mockAllowListRepository,
+            contentBlocking = mockContentBlocking,
+            bypassedSSLCertificatesRepository = mockBypassedSSLCertificatesRepository,
+            appCoroutineScope = coroutineRule.testScope,
+            dispatcherProvider = coroutineRule.testDispatcherProvider,
+            duckDuckGoUrlDetector = mockDuckDuckGoUrlDetector,
+        )
+        Assert.assertNull(testee.openerContext)
+    }
+
+    @Test
+    fun whenReferrerIsDdgDomainThenOpenerContextIsAssignedSerp() {
+        val testee = SiteMonitor(
+            url = document,
+            title = null,
+            userAllowListRepository = mockAllowListRepository,
+            contentBlocking = mockContentBlocking,
+            bypassedSSLCertificatesRepository = mockBypassedSSLCertificatesRepository,
+            appCoroutineScope = coroutineRule.testScope,
+            dispatcherProvider = coroutineRule.testDispatcherProvider,
+            duckDuckGoUrlDetector = mockDuckDuckGoUrlDetector,
+        )
+        val ddgUrl = "https://duckduckgo.com"
+        whenever(mockDuckDuckGoUrlDetector.isDuckDuckGoUrl(ddgUrl)).thenReturn(true)
+        testee.inferOpenerContext(ddgUrl)
+        assertEquals(OpenerContext.SERP, testee.openerContext)
+    }
+
+    @Test
+    fun whenReferrerIsAnyNonDdgDomainThenOpenerContextIsAssignedNavigation() {
+        val testee = SiteMonitor(
+            url = document,
+            title = null,
+            userAllowListRepository = mockAllowListRepository,
+            contentBlocking = mockContentBlocking,
+            bypassedSSLCertificatesRepository = mockBypassedSSLCertificatesRepository,
+            appCoroutineScope = coroutineRule.testScope,
+            dispatcherProvider = coroutineRule.testDispatcherProvider,
+            duckDuckGoUrlDetector = mockDuckDuckGoUrlDetector,
+        )
+        testee.inferOpenerContext(document)
+        assertEquals(OpenerContext.NAVIGATION, testee.openerContext)
+    }
+
+    @Test
+    fun whenLaunchedByExternalAppThenOpenerContextIsNotReassignedAndRemainsExternal() {
+        val testee = SiteMonitor(
+            url = document,
+            title = null,
+            userAllowListRepository = mockAllowListRepository,
+            contentBlocking = mockContentBlocking,
+            bypassedSSLCertificatesRepository = mockBypassedSSLCertificatesRepository,
+            appCoroutineScope = coroutineRule.testScope,
+            dispatcherProvider = coroutineRule.testDispatcherProvider,
+            duckDuckGoUrlDetector = mockDuckDuckGoUrlDetector,
+        )
+        testee.openerContext = OpenerContext.EXTERNAL
+        testee.inferOpenerContext(document)
+        assertEquals(OpenerContext.EXTERNAL, testee.openerContext)
     }
 
     fun givenASiteMonitor(

@@ -20,6 +20,7 @@ import android.net.Uri
 import com.duckduckgo.app.brokensite.BrokenSiteViewModel
 import com.duckduckgo.app.brokensite.api.BrokenSiteSubmitter
 import com.duckduckgo.app.brokensite.model.BrokenSite
+import com.duckduckgo.app.brokensite.model.OpenerContext
 import com.duckduckgo.app.brokensite.model.ReportFlow
 import com.duckduckgo.app.pixels.AppPixelName
 import com.duckduckgo.app.privacy.db.UserAllowListRepository
@@ -171,6 +172,7 @@ class BrokenSitesReferenceTest(private val testCase: TestCase) {
             reportFlow = ReportFlow.MENU,
             userRefreshCount = 0,
             openerContext = null,
+            jsPerformance = null,
         )
 
         testee.submitBrokenSiteFeedback(brokenSite)

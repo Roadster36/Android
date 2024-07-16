@@ -45,9 +45,6 @@ class PerformanceMetricsScriptJsInjectorPlugin @Inject constructor(): JsInjector
         webView.evaluateJavascript(
             script,
         ) { value ->
-            // The value is returned as a JSON string, so you might need to parse it
-            // For example, if the value is "1234.56", it will be returned as "1234.56"
-            // You can parse it to a float or double if needed
             if ("null" != value) {
                 val fcpTime = value.toDouble()
                 site?.recordFirstContentfulPaint(fcpTime)

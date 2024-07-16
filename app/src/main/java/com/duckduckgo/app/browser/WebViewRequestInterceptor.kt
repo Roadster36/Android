@@ -115,14 +115,16 @@ class WebViewRequestInterceptor(
         if (appUrlPixel(url)) return null
 
         if (url != null && duckPlayer.isDuckPlayerUri(url)) {
-            withContext(dispatchers.main()) {
-                if (url.pathSegments?.firstOrNull()?.equals("openInYoutube", ignoreCase = true) == true) {
-                    duckPlayer.createYoutubeWatchUrlFromDuckPlayer(url)?.let { youtubeUrl ->
-                        duckPlayer.youTubeRequestedFromDuckPlayer()
+            if (url.pathSegments?.firstOrNull()?.equals("openInYoutube", ignoreCase = true) == true) {
+                duckPlayer.createYoutubeWatchUrlFromDuckPlayer(url)?.let { youtubeUrl ->
+                    duckPlayer.youTubeRequestedFromDuckPlayer()
+                    withContext(dispatchers.main()) {
                         webView.loadUrl(youtubeUrl)
                     }
-                } else {
-                    duckPlayer.createYoutubeNoCookieFromDuckPlayer(url)?.let { youtubeUrl ->
+                }
+            } else {
+                duckPlayer.createYoutubeNoCookieFromDuckPlayer(url)?.let { youtubeUrl ->
+                    withContext(dispatchers.main()) {
                         webView.loadUrl(youtubeUrl)
                     }
                 }

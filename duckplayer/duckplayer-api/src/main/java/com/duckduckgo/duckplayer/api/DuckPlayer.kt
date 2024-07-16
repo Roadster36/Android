@@ -46,6 +46,12 @@ interface DuckPlayer {
      */
     suspend fun getUserPreferences(): UserPreferences
 
+    fun shouldHideDuckPlayerOverlay(): Boolean
+
+    fun duckPlayerOverlayHidden()
+
+    suspend fun shouldNavigateToDuckPlayer(): Boolean
+
     /**
      * Retrieves a flow of user preferences.
      *
@@ -84,6 +90,8 @@ interface DuckPlayer {
      * @return The YouTube no-cookie URI.
      */
     fun createYoutubeNoCookieFromDuckPlayer(uri: Uri): String?
+
+    fun createYoutubeWatchUrlFromDuckPlayer(uri: Uri): String?
 
     /**
      * Checks if a URI is a DuckPlayer URI.
@@ -140,6 +148,7 @@ interface DuckPlayer {
      * @return The path of the URI.
      */
     fun getDuckPlayerAssetsPath(url: Uri): String?
+    suspend fun youTubeRequestedFromDuckPlayer()
 
     /**
      * Data class representing user preferences for Duck Player.

@@ -17,6 +17,7 @@
 package com.duckduckgo.duckplayer.impl
 
 import android.net.Uri
+import android.util.Log
 import androidx.core.net.toUri
 import com.duckduckgo.app.statistics.pixels.Pixel
 import com.duckduckgo.common.utils.UrlScheme
@@ -27,6 +28,7 @@ import com.duckduckgo.duckplayer.api.PrivatePlayerMode.AlwaysAsk
 import com.duckduckgo.duckplayer.api.PrivatePlayerMode.Disabled
 import com.duckduckgo.duckplayer.api.PrivatePlayerMode.Enabled
 import com.squareup.anvil.annotations.ContributesBinding
+import dagger.SingleInstanceIn
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -35,12 +37,16 @@ private const val YOUTUBE_NO_COOKIE_HOST = "youtube-nocookie.com"
 private const val YOUTUBE_HOST = "youtube.com"
 private const val YOUTUBE_MOBILE_HOST = "m.youtube.com"
 
+@SingleInstanceIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 class RealDuckPlayer @Inject constructor(
     private val duckPlayerFeatureRepository: DuckPlayerFeatureRepository,
     private val duckPlayerFeature: DuckPlayerFeature,
     private val pixel: Pixel,
 ) : DuckPlayer {
+
+    private var shouldForceYTNavigation = false
+    private var shouldHideOverlay = false
 
     override fun isDuckPlayerAvailable(): Boolean {
         return duckPlayerFeature.self().isEnabled()
@@ -64,6 +70,21 @@ class RealDuckPlayer @Inject constructor(
         }
     }
 
+    override fun shouldHideDuckPlayerOverlay(): Boolean {
+        return shouldHideOverlay
+    }
+
+    override fun duckPlayerOverlayHidden() {
+        shouldHideOverlay = false
+    }
+
+    override suspend fun shouldNavigateToDuckPlayer(): Boolean {
+        val result = getUserPreferences().privatePlayerMode == Enabled && !shouldForceYTNavigation
+        Log.d("Cris", "shouldNavigateToDuckPlayer: $result")
+        shouldForceYTNavigation = false
+        return result
+    }
+
     override fun observeUserPreferences(): Flow<UserPreferences> {
         return duckPlayerFeatureRepository.observeUserPreferences().map {
             UserPreferences(it.overlayInteracted, it.privatePlayerMode)
@@ -85,6 +106,19 @@ class RealDuckPlayer @Inject constructor(
         return null
     }
 
+    override fun createYoutubeWatchUrlFromDuckPlayer(uri: Uri): String? {
+        uri.getQueryParameter("v")?.let { videoID ->
+            return "https://$YOUTUBE_HOST/watch?v=$videoID"
+        }
+        return null
+    }
+
+    override suspend fun youTubeRequestedFromDuckPlayer() {
+        shouldForceYTNavigation = true
+        if (getUserPreferences().privatePlayerMode == AlwaysAsk) {
+            shouldHideOverlay = true
+        }
+    }
     override fun isDuckPlayerUri(uri: Uri): Boolean {
         if (uri.normalizeScheme()?.scheme != UrlScheme.duck) return false
         if (uri.userInfo != null) return false

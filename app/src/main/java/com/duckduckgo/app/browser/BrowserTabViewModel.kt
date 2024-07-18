@@ -1096,7 +1096,7 @@ class BrowserTabViewModel @Inject constructor(
         when (stateChange) {
             is WebNavigationStateChange.NewPage -> {
                 val uri = stateChange.url.toUri()
-                if (duckPlayer.isYoutubeNoCookie(uri)) {
+                if (duckPlayer.isSimulatedYoutubeNoCookie(uri)) {
                     pageChanged(duckPlayer.createDuckPlayerUriFromYoutubeNoCookie(uri), stateChange.title)
                 } else {
                     pageChanged(stateChange.url, stateChange.title)
@@ -1105,7 +1105,7 @@ class BrowserTabViewModel @Inject constructor(
             is WebNavigationStateChange.PageCleared -> pageCleared()
             is WebNavigationStateChange.UrlUpdated -> {
                 val uri = stateChange.url.toUri()
-                if (duckPlayer.isYoutubeNoCookie(uri)) {
+                if (duckPlayer.isSimulatedYoutubeNoCookie(uri)) {
                     urlUpdated(duckPlayer.createDuckPlayerUriFromYoutubeNoCookie(uri))
                 } else {
                     urlUpdated(stateChange.url)

@@ -22,6 +22,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import androidx.annotation.WorkerThread
+import androidx.core.net.toUri
 import com.duckduckgo.adclick.api.AdClickManager
 import com.duckduckgo.app.privacy.db.PrivacyProtectionCountDao
 import com.duckduckgo.app.privacy.model.TrustedSites
@@ -132,13 +133,23 @@ class WebViewRequestInterceptor(
             return WebResourceResponse(null, null, null)
         }
 
-        if (url != null && duckPlayer.isYoutubeWatchUrl(url) && duckPlayer.shouldNavigateToDuckPlayer()) {
-            withContext(dispatchers.main()) {
-                webView.loadUrl(duckPlayer.createDuckPlayerUriFromYoutube(url))
+        if (url != null && duckPlayer.isYoutubeWatchUrl(url)) {
+            val referer = request.requestHeaders["Referer"]
+            val previousUrl = url.getQueryParameter("embeds_referring_euri")
+            if (referer != null &&
+                previousUrl != null &&
+                duckPlayer.isSimulatedYoutubeNoCookie(referer.toUri()) &&
+                duckPlayer.isSimulatedYoutubeNoCookie(previousUrl)
+            ) {
+                duckPlayer.youTubeRequestedFromDuckPlayer()
+            } else if (duckPlayer.shouldNavigateToDuckPlayer()) {
+                withContext(dispatchers.main()) {
+                    webView.loadUrl(duckPlayer.createDuckPlayerUriFromYoutube(url))
+                }
             }
         }
 
-        if (url != null && duckPlayer.isYoutubeNoCookie(url)) {
+        if (url != null && duckPlayer.isSimulatedYoutubeNoCookie(url)) {
             val path = duckPlayer.getDuckPlayerAssetsPath(request.url)
             val mimeType = mimeTypeMap.getMimeTypeFromExtension(path?.substringAfterLast("."))
 

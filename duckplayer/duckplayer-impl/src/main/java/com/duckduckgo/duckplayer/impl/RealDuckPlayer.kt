@@ -17,7 +17,6 @@
 package com.duckduckgo.duckplayer.impl
 
 import android.net.Uri
-import android.util.Log
 import androidx.core.net.toUri
 import com.duckduckgo.app.statistics.pixels.Pixel
 import com.duckduckgo.common.utils.UrlScheme
@@ -80,7 +79,6 @@ class RealDuckPlayer @Inject constructor(
 
     override suspend fun shouldNavigateToDuckPlayer(): Boolean {
         val result = getUserPreferences().privatePlayerMode == Enabled && !shouldForceYTNavigation
-        Log.d("Cris", "shouldNavigateToDuckPlayer: $result")
         shouldForceYTNavigation = false
         return result
     }
@@ -139,12 +137,25 @@ class RealDuckPlayer @Inject constructor(
         return uri.host == "settings" && uri.pathSegments.firstOrNull() == "duckplayer"
     }
 
-    override fun isYoutubeNoCookie(uri: Uri): Boolean {
-        return uri.host == YOUTUBE_NO_COOKIE_HOST
+    override fun isSimulatedYoutubeNoCookie(uri: Uri): Boolean {
+        val validPaths = listOf(
+            "js/index.css",
+            "js/inline.js",
+            "js/index.js",
+            "js/player-bg-KEARYNU4.png",
+        )
+        return (
+            uri.host?.removePrefix("www.") ==
+                YOUTUBE_NO_COOKIE_HOST && (
+                uri.pathSegments.firstOrNull() == null ||
+                    validPaths.any { uri.path?.contains(it) == true } ||
+                    (uri.pathSegments.firstOrNull() != "embed" && uri.getQueryParameter("videoID") != null)
+                )
+            )
     }
 
-    override fun isYoutubeNoCookie(uri: String): Boolean {
-        return isYoutubeNoCookie(uri.toUri())
+    override fun isSimulatedYoutubeNoCookie(uri: String): Boolean {
+        return isSimulatedYoutubeNoCookie(uri.toUri())
     }
 
     override fun getDuckPlayerAssetsPath(url: Uri): String? {

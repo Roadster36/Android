@@ -118,15 +118,15 @@ interface DuckPlayer {
     fun isDuckPlayerUri(uri: String): Boolean
 
     /**
-     * Checks if a URI is a YouTube no-cookie URI.
+     * Checks if a URI is a simulated YouTube no-cookie URI.
      *
      * @param uri The URI to check.
      * @return True if the URI is a YouTube no-cookie URI, false otherwise.
      */
-    fun isYoutubeNoCookie(uri: Uri): Boolean
+    fun isSimulatedYoutubeNoCookie(uri: Uri): Boolean
 
     /**
-     * Checks if a URI is a YouTube no-cookie URI.
+     * Checks if a URI is a simulated YouTube no-cookie URI.
      *
      * @param uri The URI to check.
      * @return True if the URI is a YouTube no-cookie URI, false otherwise.
@@ -139,7 +139,7 @@ interface DuckPlayer {
      * @param uri The string to check.
      * @return True if the string is a YouTube no-cookie URI, false otherwise.
      */
-    fun isYoutubeNoCookie(uri: String): Boolean
+    fun isSimulatedYoutubeNoCookie(uri: String): Boolean
 
     /**
      * Retrieves the duck player assets path from a URI.

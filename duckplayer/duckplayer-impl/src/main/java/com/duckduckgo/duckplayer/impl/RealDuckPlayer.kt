@@ -79,8 +79,11 @@ class RealDuckPlayer @Inject constructor(
 
     override suspend fun shouldNavigateToDuckPlayer(): Boolean {
         val result = getUserPreferences().privatePlayerMode == Enabled && !shouldForceYTNavigation
-        shouldForceYTNavigation = false
         return result
+    }
+
+    override fun duckPlayerNavigatedToYoutube() {
+        shouldForceYTNavigation = false
     }
 
     override fun observeUserPreferences(): Flow<UserPreferences> {

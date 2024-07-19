@@ -109,10 +109,6 @@ class WebViewRequestInterceptor(
 
         if (appUrlPixel(url)) return null
 
-        if (url != null) {
-            duckPlayerRequestInterceptor.intercept(request, url, webView)?.let { return it }
-        }
-
         if (shouldUpgrade(request)) {
             val newUri = url?.let { httpsUpgrader.upgrade(url) }
 
@@ -123,6 +119,10 @@ class WebViewRequestInterceptor(
             webViewClientListener?.upgradedToHttps()
             privacyProtectionCountDao.incrementUpgradeCount()
             return WebResourceResponse(null, null, null)
+        }
+
+        if (url != null) {
+            duckPlayerRequestInterceptor.intercept(request, url, webView)?.let { return it }
         }
 
         if (url != null && shouldAddGcpHeaders(request) && !requestWasInTheStack(url, webView)) {

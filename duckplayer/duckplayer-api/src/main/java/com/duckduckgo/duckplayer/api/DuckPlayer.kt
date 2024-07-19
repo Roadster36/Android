@@ -50,6 +50,8 @@ interface DuckPlayer {
 
     fun duckPlayerOverlayHidden()
 
+    fun duckPlayerNavigatedToYoutube()
+
     suspend fun shouldNavigateToDuckPlayer(): Boolean
 
     /**

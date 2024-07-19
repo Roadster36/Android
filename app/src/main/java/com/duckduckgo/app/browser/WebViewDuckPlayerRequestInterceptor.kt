@@ -53,13 +53,9 @@ class RealWebViewDuckPlayerRequestInterceptor @Inject constructor(
     ): WebResourceResponse? {
         if (duckPlayer.isDuckPlayerUri(url)) {
             return processDuckPlayerUri(url, webView)
-        }
-
-        if (duckPlayer.isYoutubeWatchUrl(url)) {
-            processYouTubeWatchUri(request, url, webView)
-        }
-
-        if (duckPlayer.isSimulatedYoutubeNoCookie(url)) {
+        } else if (duckPlayer.isYoutubeWatchUrl(url)) {
+            return processYouTubeWatchUri(request, url, webView)
+        } else if (duckPlayer.isSimulatedYoutubeNoCookie(url)) {
             return processSimulatedYouTubeNoCookieUri(url, webView)
         }
 
@@ -89,20 +85,25 @@ class RealWebViewDuckPlayerRequestInterceptor @Inject constructor(
         request: WebResourceRequest,
         url: Uri,
         webView: WebView,
-    ) {
+    ): WebResourceResponse? {
         val referer = request.requestHeaders["Referer"]
         val previousUrl = url.getQueryParameter("embeds_referring_euri")
-        if (referer != null &&
-            previousUrl != null &&
-            duckPlayer.isSimulatedYoutubeNoCookie(referer.toUri()) &&
-            duckPlayer.isSimulatedYoutubeNoCookie(previousUrl)
+        if ((referer != null && duckPlayer.isSimulatedYoutubeNoCookie(referer.toUri())) ||
+            (previousUrl != null && duckPlayer.isSimulatedYoutubeNoCookie(previousUrl))
         ) {
-            duckPlayer.youTubeRequestedFromDuckPlayer()
+            withContext(dispatchers.main()) {
+                url.getQueryParameter("v")?.let {
+                    webView.loadUrl("duck://player/openInYoutube?v=$it")
+                }
+            }
+            return WebResourceResponse(null, null, null)
         } else if (duckPlayer.shouldNavigateToDuckPlayer()) {
             withContext(dispatchers.main()) {
                 webView.loadUrl(duckPlayer.createDuckPlayerUriFromYoutube(url))
             }
+            return WebResourceResponse(null, null, null)
         }
+        return null
     }
 
     private suspend fun processDuckPlayerUri(

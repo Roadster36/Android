@@ -387,6 +387,9 @@ class BrowserWebViewClient @Inject constructor(
                                     navigationList.currentItem?.title,
                                 )
                             } else {
+                                if (duckPlayer.isYoutubeWatchUrl(url.toUri())) {
+                                    duckPlayer.duckPlayerNavigatedToYoutube()
+                                }
                                 navigationHistory.saveToHistory(url, navigationList.currentItem?.title)
                             }
                         }

@@ -118,7 +118,16 @@ class DuckPlayerJSHelper @Inject constructor(
 
             "setUserValues" -> if (id != null && data != null) {
                 setUserPreferences(data)
-                return SendResponseToJs(getUserPreferences(featureName, method, id))
+                return when (featureName) {
+                    DUCK_PLAYER_FEATURE_NAME -> {
+                        SendResponseToJs(getUserPreferences(featureName, method, id))
+                    }
+                    DUCK_PLAYER_PAGE_FEATURE_NAME -> {
+                        SendResponseToDuckPlayer(getUserPreferences(featureName, method, id))
+                    } else -> {
+                        null
+                    }
+                }
             }
 
             "sendDuckPlayerPixel" -> if (data != null) {

@@ -121,6 +121,6 @@ class DuckPlayerScriptsJsMessaging @Inject constructor(
 
         override val allowedDomains: List<String> = emptyList()
         override val featureName: String = "duckPlayerPage"
-        override val methods: List<String> = listOf("initialSetup", "openSettings", "openInfo")
+        override val methods: List<String> = listOf("initialSetup", "openSettings", "openInfo", "setUserValues")
     }
 }

@@ -102,7 +102,7 @@ class RealDuckPlayer @Inject constructor(
 
     override fun createYoutubeNoCookieFromDuckPlayer(uri: Uri): String? {
         uri.pathSegments?.firstOrNull()?.let { videoID ->
-            return "https://$YOUTUBE_NO_COOKIE_HOST?videoID=$videoID"
+            return "https://www.$YOUTUBE_NO_COOKIE_HOST?videoID=$videoID"
         }
         return null
     }

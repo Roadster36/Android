@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 DuckDuckGo
+ * Copyright (c) 2024 DuckDuckGo
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.duckduckgo.performancemetrics.store
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+package com.duckduckgo.performancemetrics.impl
 
-@Entity(tableName = "performance_metrics")
-data class PerformanceMetricsEntity(
-    @PrimaryKey val id: Int = 1,
-    val json: String,
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+
+@Database(
+    exportSchema = true,
+    version = 1,
+    entities = [
+        PerformanceMetricsEntity::class,
+    ],
 )
+abstract class PerformanceMetricsDatabase : RoomDatabase() {
+    abstract fun performanceMetricsDao(): PerformanceMetricsDao
+}
+
+val ALL_MIGRATIONS = emptyArray<Migration>()

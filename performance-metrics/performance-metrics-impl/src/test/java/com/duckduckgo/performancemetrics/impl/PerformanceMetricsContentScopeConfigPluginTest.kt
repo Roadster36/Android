@@ -16,8 +16,6 @@
 
 package com.duckduckgo.performancemetrics.impl
 
-import com.duckduckgo.performancemetrics.store.PerformanceMetricsEntity
-import com.duckduckgo.performancemetrics.store.PerformanceMetricsRepository
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import org.junit.Before
@@ -38,7 +36,9 @@ class PerformanceMetricsContentScopeConfigPluginTest {
 
     @Test
     fun whenGetConfigThenReturnCorrectlyFormattedJson() {
-        whenever(mockPerformanceMetricsRepository.getPerformanceMetricsEntity()).thenReturn(PerformanceMetricsEntity(json = config))
+        whenever(mockPerformanceMetricsRepository.getPerformanceMetricsEntity()).thenReturn(
+            PerformanceMetricsEntity(json = config)
+        )
         assertEquals("\"performanceMetrics\":$config", testee.config())
     }
 

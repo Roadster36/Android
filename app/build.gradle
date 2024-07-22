@@ -324,7 +324,6 @@ dependencies {
     implementation project(':broken-site-store')
 
     implementation project(':performance-metrics-impl')
-    implementation project(':performance-metrics-store')
 
     // Deprecated. TODO: Stop using this artifact.
     implementation "androidx.legacy:legacy-support-v4:_"

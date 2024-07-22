@@ -3048,8 +3048,11 @@ class BrowserTabViewModel @Inject constructor(
 
             "screenUnlock" -> screenUnlock()
 
-            "performanceMetrics" -> println("PerfMetrics processing in BTVM - " +
-                "featureName: $featureName, method: $method, id: $id, data: $data")
+            "performanceMetrics" -> {
+                println("PerfMetrics processing in BTVM - " +
+                    "featureName: $featureName, method: $method, id: $id, data: $data")
+                // site?.recordFirstContentfulPaint("extractSomethingFromMessage")
+            }
             else -> {
                 // NOOP
             }

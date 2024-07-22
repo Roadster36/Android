@@ -3047,6 +3047,9 @@ class BrowserTabViewModel @Inject constructor(
             }
 
             "screenUnlock" -> screenUnlock()
+
+            "performanceMetrics" -> println("PerfMetrics processing in BTVM - " +
+                "featureName: $featureName, method: $method, id: $id, data: $data")
             else -> {
                 // NOOP
             }

@@ -2346,6 +2346,8 @@ class BrowserTabFragment :
                         id: String?,
                         data: JSONObject?,
                     ) {
+                        println("PerfMetrics processing in BTF - " +
+                            "featureName: $featureName, method: $method, id: $id, data: $data")
                         viewModel.processJsCallbackMessage(featureName, method, id, data)
                     }
                 },

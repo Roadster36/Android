@@ -57,9 +57,7 @@ class TabSwitcherViewModel @Inject constructor(
 
     var tabs: LiveData<List<TabEntity>> = tabRepository.liveTabs
     val activeTab = tabRepository.liveSelectedTab
-    var deletableTabs: LiveData<List<TabEntity>> = tabRepository.flowDeletableTabs.asLiveData(
-        context = viewModelScope.coroutineContext,
-    )
+    var deletableTabs: LiveData<List<TabEntity>> = tabRepository.flowDeletableTabs.asLiveData(viewModelScope.coroutineContext)
 
     private var announcementDisplayCount: Int = 0
     private var isBannerAlreadyVisible: Boolean = false

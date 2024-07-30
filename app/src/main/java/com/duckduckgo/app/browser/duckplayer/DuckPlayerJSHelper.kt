@@ -26,6 +26,7 @@ import com.duckduckgo.duckplayer.api.DuckPlayer
 import com.duckduckgo.js.messaging.api.JsCallbackData
 import javax.inject.Inject
 import org.json.JSONObject
+import timber.log.Timber
 
 const val DUCK_PLAYER_PAGE_FEATURE_NAME = "duckPlayerPage"
 const val DUCK_PLAYER_FEATURE_NAME = "duckPlayer"
@@ -154,6 +155,9 @@ class DuckPlayerJSHelper @Inject constructor(
             }
             "openSettings" -> {
                 return OpenDuckPlayerSettings
+            }
+            "reportPageException", "reportInitException" -> {
+                Timber.tag(method).d(data.toString())
             }
             else -> {
                 return null

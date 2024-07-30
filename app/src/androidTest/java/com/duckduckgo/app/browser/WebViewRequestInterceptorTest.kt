@@ -38,7 +38,6 @@ import com.duckduckgo.app.trackerdetection.model.TrackerStatus
 import com.duckduckgo.app.trackerdetection.model.TrackerType
 import com.duckduckgo.app.trackerdetection.model.TrackingEvent
 import com.duckduckgo.common.test.CoroutineTestRule
-import com.duckduckgo.duckplayer.api.DuckPlayer
 import com.duckduckgo.feature.toggles.api.FeatureToggle
 import com.duckduckgo.httpsupgrade.api.HttpsUpgrader
 import com.duckduckgo.privacy.config.api.Gpc
@@ -73,7 +72,7 @@ class WebViewRequestInterceptorTest {
     private val mockAdClickManager: AdClickManager = mock()
     private val mockCloakedCnameDetector: CloakedCnameDetector = mock()
     private val mockRequestFilterer: RequestFilterer = mock()
-    private val mockDuckPlayer: DuckPlayer = mock()
+    private val mockDuckPlayerInterceptor: WebViewDuckPlayerRequestInterceptor = mock()
     private val fakeUserAgent: UserAgent = UserAgentFake()
     private val fakeToggle: FeatureToggle = FeatureToggleFake()
     private val fakeUserAllowListRepository = UserAllowListRepositoryFake()
@@ -104,8 +103,7 @@ class WebViewRequestInterceptorTest {
             adClickManager = mockAdClickManager,
             cloakedCnameDetector = mockCloakedCnameDetector,
             requestFilterer = mockRequestFilterer,
-            duckPlayer = mockDuckPlayer,
-            mimeTypeMap = MimeTypeMap.getSingleton(),
+            duckPlayerRequestInterceptor = mockDuckPlayerInterceptor,
         )
     }
 

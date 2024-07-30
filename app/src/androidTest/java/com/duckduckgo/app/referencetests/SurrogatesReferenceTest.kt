@@ -25,6 +25,7 @@ import androidx.room.Room
 import androidx.test.annotation.UiThreadTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.duckduckgo.adclick.api.AdClickManager
+import com.duckduckgo.app.browser.WebViewDuckPlayerRequestInterceptor
 import com.duckduckgo.app.browser.WebViewRequestInterceptor
 import com.duckduckgo.app.browser.useragent.provideUserAgentOverridePluginPoint
 import com.duckduckgo.app.fakes.FeatureToggleFake
@@ -52,7 +53,6 @@ import com.duckduckgo.app.trackerdetection.db.TdsEntityDao
 import com.duckduckgo.app.trackerdetection.db.WebTrackersBlockedDao
 import com.duckduckgo.common.test.CoroutineTestRule
 import com.duckduckgo.common.test.FileUtilities
-import com.duckduckgo.duckplayer.api.DuckPlayer
 import com.duckduckgo.feature.toggles.api.FeatureToggle
 import com.duckduckgo.httpsupgrade.api.HttpsUpgrader
 import com.duckduckgo.privacy.config.api.ContentBlocking
@@ -100,7 +100,7 @@ class SurrogatesReferenceTest(private val testCase: TestCase) {
     private var mockRequest: WebResourceRequest = mock()
     private val mockPrivacyProtectionCountDao: PrivacyProtectionCountDao = mock()
     private val mockRequestFilterer: RequestFilterer = mock()
-    private val mockDuckPlayer: DuckPlayer = mock()
+    private val mockDuckPlayerInterceptor: WebViewDuckPlayerRequestInterceptor = mock()
     private val fakeUserAgent: UserAgent = UserAgentFake()
     private val fakeToggle: FeatureToggle = FeatureToggleFake()
     private val fakeUserAllowListRepository = UserAllowListRepositoryFake()
@@ -170,8 +170,7 @@ class SurrogatesReferenceTest(private val testCase: TestCase) {
             adClickManager = mockAdClickManager,
             cloakedCnameDetector = mockCloakedCnameDetector,
             requestFilterer = mockRequestFilterer,
-            duckPlayer = mockDuckPlayer,
-            mimeTypeMap = MimeTypeMap.getSingleton(),
+            duckPlayerRequestInterceptor = mockDuckPlayerInterceptor,
         )
     }
 

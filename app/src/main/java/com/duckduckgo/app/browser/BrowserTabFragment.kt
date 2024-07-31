@@ -250,6 +250,7 @@ import com.duckduckgo.downloads.api.DownloadConfirmationDialogListener
 import com.duckduckgo.downloads.api.DownloadsFileActions
 import com.duckduckgo.downloads.api.FileDownloader
 import com.duckduckgo.downloads.api.FileDownloader.PendingFileDownload
+import com.duckduckgo.duckplayer.api.DuckPlayerBottomSheet
 import com.duckduckgo.duckplayer.api.DuckPlayerSettingsNoParams
 import com.duckduckgo.js.messaging.api.JsCallbackData
 import com.duckduckgo.js.messaging.api.JsMessageCallback
@@ -1545,6 +1546,7 @@ class BrowserTabFragment :
             is Command.LaunchScreen -> launchScreen(it.screen, it.payload)
             is Command.HideOnboardingDaxDialog -> hideOnboardingDaxDialog(it.onboardingCta)
             is Command.OpenDuckPlayerSettings -> globalActivityStarter.start(binding.root.context, DuckPlayerSettingsNoParams)
+            is Command.OpenDuckPlayerInfo -> DuckPlayerBottomSheet.newInstance().show(childFragmentManager, null)
             else -> {
                 // NO OP
             }

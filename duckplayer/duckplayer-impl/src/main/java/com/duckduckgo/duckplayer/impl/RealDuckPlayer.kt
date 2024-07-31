@@ -110,6 +110,8 @@ class RealDuckPlayer @Inject constructor(
     override fun createYoutubeWatchUrlFromDuckPlayer(uri: Uri): String? {
         uri.getQueryParameter("v")?.let { videoID ->
             return "https://$YOUTUBE_HOST/watch?v=$videoID"
+        } ?: uri.pathSegments.firstOrNull()?.let { videoID ->
+            return "https://$YOUTUBE_HOST/watch?v=$videoID"
         }
         return null
     }

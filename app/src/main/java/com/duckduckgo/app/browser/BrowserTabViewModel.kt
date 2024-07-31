@@ -2362,7 +2362,7 @@ class BrowserTabViewModel @Inject constructor(
 
     fun onShareSelected() {
         url?.let {
-            command.value = ShareLink(removeAtbAndSourceParamsFromSearch(it), title.orEmpty())
+            command.value = ShareLink(transformUrlToShare(it), title.orEmpty())
         }
     }
 
@@ -2378,6 +2378,16 @@ class BrowserTabViewModel @Inject constructor(
 
     override fun historicalPageSelected(stackIndex: Int) {
         command.value = NavigationCommand.NavigateToHistory(stackIndex)
+    }
+
+    private fun transformUrlToShare(url: String): String {
+        return if (duckDuckGoUrlDetector.isDuckDuckGoQueryUrl(url)) {
+            removeAtbAndSourceParamsFromSearch(url)
+        } else if (duckPlayer.isDuckPlayerUri(url)) {
+            transformDuckPlayerUrl(url)
+        } else {
+            url
+        }
     }
 
     private fun removeAtbAndSourceParamsFromSearch(url: String): String {
@@ -2396,6 +2406,14 @@ class BrowserTabViewModel @Inject constructor(
         }
 
         return builder.build().toString()
+    }
+
+    private fun transformDuckPlayerUrl(url: String): String {
+        return if (duckPlayer.isDuckPlayerUri(url)) {
+            duckPlayer.createYoutubeWatchUrlFromDuckPlayer(url.toUri()) ?: url
+        } else {
+            url
+        }
     }
 
     fun saveWebViewState(

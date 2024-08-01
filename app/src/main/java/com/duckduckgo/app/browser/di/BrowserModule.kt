@@ -19,7 +19,6 @@ package com.duckduckgo.app.browser.di
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
-import android.webkit.MimeTypeMap
 import androidx.room.Room
 import androidx.work.WorkManager
 import com.duckduckgo.adclick.api.AdClickManager
@@ -339,11 +338,5 @@ class BrowserModule {
     @SingleInstanceIn(AppScope::class)
     fun providesMediaPlaybackDao(mediaPlaybackDatabase: MediaPlaybackDatabase): MediaPlaybackDao {
         return mediaPlaybackDatabase.mediaPlaybackDao()
-    }
-
-    @Provides
-    @SingleInstanceIn(AppScope::class)
-    fun provideMimeTypeMap(): MimeTypeMap {
-        return MimeTypeMap.getSingleton()
     }
 }

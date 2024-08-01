@@ -42,6 +42,7 @@ class RealDuckPlayer @Inject constructor(
     private val duckPlayerFeatureRepository: DuckPlayerFeatureRepository,
     private val duckPlayerFeature: DuckPlayerFeature,
     private val pixel: Pixel,
+    private val duckPlayerLocalFilesPath: DuckPlayerLocalFilesPath,
 ) : DuckPlayer {
 
     private var shouldForceYTNavigation = false
@@ -143,12 +144,7 @@ class RealDuckPlayer @Inject constructor(
     }
 
     override fun isSimulatedYoutubeNoCookie(uri: Uri): Boolean {
-        val validPaths = listOf(
-            "js/index.css",
-            "js/inline.js",
-            "js/index.js",
-            "js/player-bg-KEARYNU4.png",
-        )
+        val validPaths = duckPlayerLocalFilesPath.assetsPath
         return (
             uri.host?.removePrefix("www.") ==
                 YOUTUBE_NO_COOKIE_HOST && (

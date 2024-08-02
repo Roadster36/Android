@@ -279,8 +279,7 @@ import com.duckduckgo.downloads.api.DownloadConfirmationDialogListener
 import com.duckduckgo.downloads.api.DownloadsFileActions
 import com.duckduckgo.downloads.api.FileDownloader
 import com.duckduckgo.downloads.api.FileDownloader.PendingFileDownload
-import com.duckduckgo.duckplayer.api.DuckPlayerBottomSheet
-import com.duckduckgo.duckplayer.api.DuckPlayerFragment
+import com.duckduckgo.duckplayer.api.DuckPlayer
 import com.duckduckgo.duckplayer.api.DuckPlayerSettingsNoParams
 import com.duckduckgo.js.messaging.api.JsCallbackData
 import com.duckduckgo.js.messaging.api.JsMessageCallback
@@ -532,6 +531,9 @@ class BrowserTabFragment :
 
     @Inject
     lateinit var singlePrintSafeguardFeature: SinglePrintSafeguardFeature
+
+    @Inject
+    lateinit var duckPlayer: DuckPlayer
 
     /**
      * We use this to monitor whether the user was seeing the in-context Email Protection signup prompt
@@ -1583,10 +1585,8 @@ class BrowserTabFragment :
             is Command.HideOnboardingDaxDialog -> hideOnboardingDaxDialog(it.onboardingCta)
             is Command.OpenDuckPlayerSettings -> globalActivityStarter.start(binding.root.context, DuckPlayerSettingsNoParams)
             is Command.OpenDuckPlayerInfo -> {
-                if (context?.resources?.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    DuckPlayerFragment.newInstance().show(childFragmentManager, null)
-                } else {
-                    DuckPlayerBottomSheet.newInstance().show(childFragmentManager, null)
+                context?.resources?.configuration?.let {
+                    duckPlayer.showDuckPlayerPrimeModal(it, childFragmentManager)
                 }
             }
             else -> {

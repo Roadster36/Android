@@ -14,8 +14,8 @@
   ~ limitations under the License.
   -->
 
-<resources>
-    <string name="duck_player_info_modal_title">Drowning in ads on YouTube? Try Duck Player!</string>
-    <string name="duck_player_info_modal_text">Duck Player lets you watch YouTube without targeted ads in a theater-like experience in DuckDuckGo and what you watch won’t influence your recommendations.</string>
-    <string name="duck_player_info_modal_button">Got it!</string>
-</resources>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="8dp" />
+    <solid android:color="@color/black9" />
+</shape>

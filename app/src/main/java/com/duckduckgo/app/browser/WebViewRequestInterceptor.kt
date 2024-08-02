@@ -33,6 +33,7 @@ import com.duckduckgo.common.utils.AppUrl
 import com.duckduckgo.common.utils.DefaultDispatcherProvider
 import com.duckduckgo.common.utils.DispatcherProvider
 import com.duckduckgo.common.utils.isHttp
+import com.duckduckgo.duckplayer.api.DuckPlayer
 import com.duckduckgo.httpsupgrade.api.HttpsUpgrader
 import com.duckduckgo.privacy.config.api.Gpc
 import com.duckduckgo.request.filterer.api.RequestFilterer
@@ -69,7 +70,7 @@ class WebViewRequestInterceptor(
     private val adClickManager: AdClickManager,
     private val cloakedCnameDetector: CloakedCnameDetector,
     private val requestFilterer: RequestFilterer,
-    private val duckPlayerRequestInterceptor: WebViewDuckPlayerRequestInterceptor,
+    private val duckPlayer: DuckPlayer,
     private val dispatchers: DispatcherProvider = DefaultDispatcherProvider(),
 ) : RequestInterceptor {
 
@@ -122,7 +123,7 @@ class WebViewRequestInterceptor(
         }
 
         if (url != null) {
-            duckPlayerRequestInterceptor.intercept(request, url, webView)?.let { return it }
+            duckPlayer.intercept(request, url, webView)?.let { return it }
         }
 
         if (url != null && shouldAddGcpHeaders(request) && !requestWasInTheStack(url, webView)) {

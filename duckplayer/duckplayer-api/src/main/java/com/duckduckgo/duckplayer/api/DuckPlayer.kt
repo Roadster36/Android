@@ -146,6 +146,12 @@ interface DuckPlayer {
         webView: WebView,
     ): WebResourceResponse?
 
+    /**
+     * Shows the Duck Player Prime modal.
+     *
+     * @param configuration The configuration of the device.
+     * @param fragmentManager The fragment manager.
+     */
     fun showDuckPlayerPrimeModal(configuration: Configuration, fragmentManager: FragmentManager)
 
     /**

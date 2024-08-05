@@ -54,11 +54,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import logcat.logcat
 
 @ContributesViewModel(ActivityScope::class)
 class SubscriptionFeedbackViewModel @Inject constructor(
     private val pixelSender: PrivacyProUnifiedFeedbackPixelSender,
+    private val feedbackCustomMetadataProvider: FeedbackCustomMetadataProvider,
 ) : ViewModel() {
     private val viewState = MutableStateFlow(ViewState())
     private val command = Channel<Command>(1, DROP_OLDEST)
@@ -174,7 +174,7 @@ class SubscriptionFeedbackViewModel @Inject constructor(
                 PARAMS_KEY_SOURCE to metadata.source!!.asParams(),
                 PARAMS_KEY_REPORT_TYPE to metadata.reportType!!.asParams(),
                 PARAMS_KEY_CATEGORY to metadata.category!!.asParams(),
-                PARAMS_KEY_SUBCATEGORY to metadata.subCategory!!.asParams(),
+                PARAMS_KEY_SUBCATEGORY to (metadata.subCategory?.asParams() ?: ""),
             ),
         )
     }
@@ -196,8 +196,18 @@ class SubscriptionFeedbackViewModel @Inject constructor(
         }
     }
 
-    private fun sendReportIssuePixel(metadata: FeedbackMetadata) {
-        logcat { "KLDIMSUM: sendReportIssuePixel for $metadata" }
+    private suspend fun sendReportIssuePixel(metadata: FeedbackMetadata) {
+        pixelSender.sendPproReportIssue(
+            mapOf(
+                PARAMS_KEY_SOURCE to metadata.source!!.asParams(),
+                PARAMS_KEY_CATEGORY to metadata.category!!.asParams(),
+                PARAMS_KEY_SUBCATEGORY to metadata.subCategory!!.asParams(),
+                PARAMS_KEY_DESC to (metadata.description ?: ""),
+                PARAMS_KEY_APP_NAME to (metadata.appName ?: ""),
+                PARAMS_KEY_APP_PACKAGE to (metadata.appPackageName ?: ""),
+                PARAMS_KEY_CUSTOM_METADATA to feedbackCustomMetadataProvider.getCustomMetadata(metadata.category),
+            ),
+        )
     }
 
     private fun sendFeatureRequestPixel(metadata: FeedbackMetadata) {
@@ -397,7 +407,6 @@ class SubscriptionFeedbackViewModel @Inject constructor(
     }
 
     sealed class Command {
-        data object FeedbackCancelled : Command()
         data object FeedbackCompleted : Command()
         data object HideKeyboard : Command()
     }
@@ -438,5 +447,7 @@ class SubscriptionFeedbackViewModel @Inject constructor(
         private const val PARAMS_KEY_SUBCATEGORY = "subcategory"
         private const val PARAMS_KEY_DESC = "description"
         private const val PARAMS_KEY_CUSTOM_METADATA = "customMetadata"
+        private const val PARAMS_KEY_APP_NAME = "appName"
+        private const val PARAMS_KEY_APP_PACKAGE = "appPackage"
     }
 }
